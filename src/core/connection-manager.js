@@ -1,10 +1,11 @@
 import {
   Browsers,
+  delay,
   DisconnectReason,
   makeCacheableSignalKeyStore,
   makeWASocket,
   useMultiFileAuthState
-} from '@itsukichan/baileys'
+} from '@itsliaaa/baileys'
 import pino from 'pino'
 import { normalizePhoneNumber } from './config.js'
 
@@ -68,11 +69,6 @@ export class ConnectionManager {
     socket.ev.on('messages.upsert', update => this.onMessages({ socket, messages: update.messages }))
     socket.ev.on('connection.update', update => this.handleConnectionUpdate(update, state, socket))
 
-    // Pairing code adalah alur mandiri. Kode diminta segera setelah socket
-    // dibuat, bukan menunggu event QR yang dapat tidak pernah tiba saat 405.
-    if (this.config.connection.usePairingCode && !state.creds.registered) {
-      void this.requestPairingCode(socket, state)
-    }
   }
 
   async requestPairingCode(socket, state) {
@@ -88,6 +84,7 @@ export class ConnectionManager {
     this.logger.info({ number }, 'Meminta pairing code resmi dari WhatsApp')
 
     try {
+      await delay(1_500)
       const code = await socket.requestPairingCode(number)
       if (socket !== this.socket || this.stopped) return
       this.onPairingCode(code)
@@ -105,6 +102,11 @@ export class ConnectionManager {
       this.reconnectAttempts = 0
       this.pairingRequested = false
       this.logger.info('CONNECTED — Showins Bot siap menerima perintah')
+      return
+    }
+
+    if (connection === 'connecting' && this.config.connection.usePairingCode && !state.creds.registered) {
+      void this.requestPairingCode(socket, state)
       return
     }
 

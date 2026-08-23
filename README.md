@@ -2,16 +2,16 @@
 
 > **Base WhatsApp bot yang ringkas, modular, dan mudah dikembangkan dari Termux.**
 
-Showins Bot adalah fondasi baru untuk bot WhatsApp pribadi. Proyek ini memakai **Baileys mod Itsukichann edge** yang dipin ke commit tertentu agar perubahan dependency tidak terjadi diam-diam. Fondasinya sengaja sederhana: koneksi yang terisolasi, konfigurasi yang jelas, plugin mandiri, log rapi, serta pengujian dasar.
+Showins Bot adalah fondasi baru untuk bot WhatsApp pribadi. Proyek ini memakai **ItsLiaaa Baileys** versi `0.3.18-final`, mod aktif dengan fitur pesan lanjutan dan alur pairing yang terdokumentasi. Fondasinya sengaja sederhana: koneksi yang terisolasi, konfigurasi yang jelas, plugin mandiri, log rapi, serta pengujian dasar.
 
 ## Mengapa base ini berbeda?
 
 | Prinsip | Implementasi |
 |---|---|
-| **Stabil** | Versi WhatsApp Web diambil dinamis; reconnect memiliki batas; session tidak pernah dihapus otomatis. |
+| **Stabil** | Reconnect memiliki batas; session tidak pernah dihapus otomatis; 405 sebelum pairing dihentikan tanpa loop. |
 | **Aman untuk pairing** | Ubuntu Chrome fingerprint dan kode pairing asli dari WhatsApp; tidak ada kode custom yang dipaksakan. |
 | **Mudah dipahami** | Satu plugin = satu berkas. Perintah otomatis terdaftar saat plugin berada di folder `plugins/`. |
-| **Siap fitur pesan kaya** | Adapter disediakan untuk quick reply; Baileys mod mendukung album, interactive message, Business buttons, AI icon, sticker pack, komunitas, serta fitur bisnis lain. |
+| **Siap fitur pesan kaya** | Adapter disediakan untuk quick reply; Baileys mod mendukung album, interactive message, rich response, code block, table, sticker pack, dan fitur bisnis lain. |
 | **Lokal terlebih dahulu** | Dibuat untuk Termux/Ubuntu proot tanpa dashboard atau layanan tambahan. |
 
 ## Struktur proyek
@@ -39,7 +39,7 @@ bash scripts/install-termux.sh
 npm start
 ```
 
-Installer membuat `config.js` jika belum ada, memasang dependency, dan menjalankan pemeriksaan awal. Sebelum `npm start`, edit `config.js` dan isi `connection.pairingNumber` dengan nomor akun WhatsApp utama Anda dalam format `628xxxxxxxxxx`.
+Installer membuat `config.js` jika belum ada, memasang dependency, dan menjalankan pemeriksaan awal. Sebelum `npm start`, edit `config.js` dan isi `connection.pairingNumber` dengan nomor akun WhatsApp utama Anda dalam format `628xxxxxxxxxx`. Saat socket berstatus `connecting`, terminal meminta pairing code satu kali dan menampilkannya dengan jelas.
 
 Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memahami folder dan cara membuat fitur baru, buka [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
@@ -76,7 +76,7 @@ npm test
 npm run inspect
 ```
 
-Pengujian memastikan nomor pairing dibersihkan dengan benar, plugin dasar termuat, dan source tidak mengirim kode pairing kustom.
+Pengujian memastikan nomor pairing dibersihkan dengan benar, plugin dasar termuat, source tidak mengirim kode pairing kustom, serta dependency mod menyediakan API yang dipakai bot.
 
 ## Batas penggunaan
 
@@ -84,8 +84,8 @@ Showins Bot terhubung melalui WhatsApp Web dan bukan produk resmi WhatsApp. Guna
 
 ## Library
 
-Proyek menggunakan [Itsukichann Baileys](https://github.com/Itsukichann/Baileys) pada commit edge yang dipin. Library ini menyediakan dukungan fitur pesan yang lebih luas, termasuk fitur WhatsApp Business dan pesan interaktif. [1]
+Proyek menggunakan [ItsLiaaa Baileys](https://github.com/itsliaaa/baileys) versi `0.3.18-final`. Library ini menyediakan dukungan fitur pesan yang lebih luas, termasuk pesan interaktif, album, rich response, code block, tabel, pembayaran, dan fitur WhatsApp Business. [1]
 
 ### Referensi
 
-[1]: https://github.com/Itsukichann/Baileys/releases "Itsukichann Baileys — rilis dan changelog"
+[1]: https://github.com/itsliaaa/baileys "ItsLiaaa Baileys — fitur dan dokumentasi"

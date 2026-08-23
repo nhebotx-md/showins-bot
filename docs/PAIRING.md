@@ -1,6 +1,6 @@
 # Pairing Showins Bot
 
-Showins Bot menggunakan **pairing code**, bukan QR. Kode 8 karakter diminta segera setelah socket dibuat dan ditampilkan dengan format yang jelas di terminal.
+Showins Bot menggunakan **pairing code**, bukan QR. Dengan ItsLiaaa Baileys, kode 8 karakter diminta satu kali ketika socket memasuki status `connecting`, lalu ditampilkan dengan format yang jelas di terminal.
 
 ```text
 [12:34:56] INFO   PAIRING CODE: ABCD1234
@@ -14,4 +14,4 @@ Masukkan kode baru itu melalui WhatsApp utama: **Perangkat tertaut → Tautkan p
 
 ## Catatan versi
 
-Showins Bot memakai versi kompatibel bawaan Baileys mod, bukan versi Web yang diambil dinamis pada setiap startup. Keputusan ini mengurangi risiko meniru versi Web yang baru dirilis tetapi belum sepenuhnya didukung oleh library.
+Showins Bot memakai `@itsliaaa/baileys` versi `0.3.18-final`, rilis mod yang dipublikasikan pada 27 Juni 2026. Versi ini dipilih karena menyediakan alur pairing `connecting` yang didokumentasikan serta fitur pesan lanjutan seperti album, interactive message, rich response, code block, table, dan inline entities.
