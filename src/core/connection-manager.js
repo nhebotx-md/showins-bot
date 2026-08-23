@@ -1,15 +1,12 @@
 import {
   Browsers,
   DisconnectReason,
-  fetchLatestBaileysVersion,
   makeCacheableSignalKeyStore,
   makeWASocket,
   useMultiFileAuthState
 } from '@itsukichan/baileys'
 import pino from 'pino'
 import { normalizePhoneNumber } from './config.js'
-
-const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds))
 
 function getStatusCode(lastDisconnect) {
   return (
@@ -45,12 +42,13 @@ export class ConnectionManager {
 
   async connect() {
     const { state, saveCreds } = await useMultiFileAuthState(this.config.connection.authDir)
-    const { version, isLatest } = await fetchLatestBaileysVersion()
-    this.logger.info({ version, isLatest }, 'Membuat koneksi WhatsApp')
-
     const browser = this.config.connection.browser || {}
-    this.socket = makeWASocket({
-      version,
+
+    this.logger.info('Membuat koneksi WhatsApp dengan versi kompatibel bawaan library')
+
+    // Jangan gunakan pencarian versi Web dinamis di sini. Server WhatsApp dapat
+    // menolak versi Web yang baru dirilis sebelum Baileys mod menyesuaikannya.
+    const socket = makeWASocket({
       auth: {
         creds: state.creds,
         keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'silent' }))
@@ -65,40 +63,43 @@ export class ConnectionManager {
       generateHighQualityLinkPreview: true
     })
 
-    this.socket.ev.on('creds.update', saveCreds)
-    this.socket.ev.on('messages.upsert', update =>
-      this.onMessages({ socket: this.socket, messages: update.messages })
-    )
-    this.socket.ev.on('connection.update', update => this.handleConnectionUpdate(update, state))
+    this.socket = socket
+    socket.ev.on('creds.update', saveCreds)
+    socket.ev.on('messages.upsert', update => this.onMessages({ socket, messages: update.messages }))
+    socket.ev.on('connection.update', update => this.handleConnectionUpdate(update, state, socket))
+
+    // Pairing code adalah alur mandiri. Kode diminta segera setelah socket
+    // dibuat, bukan menunggu event QR yang dapat tidak pernah tiba saat 405.
+    if (this.config.connection.usePairingCode && !state.creds.registered) {
+      void this.requestPairingCode(socket, state)
+    }
   }
 
-  async handleConnectionUpdate(update, state) {
-    const { connection, lastDisconnect, qr } = update
-
-    if (
-      qr &&
-      this.config.connection.usePairingCode &&
-      !state.creds.registered &&
-      !this.pairingRequested
-    ) {
-      const number = normalizePhoneNumber(this.config.connection.pairingNumber)
-      if (!number) {
-        this.logger.error('Nomor pairing belum diatur pada config.js')
-        return
-      }
-
-      this.pairingRequested = true
-      try {
-        await wait(2_500)
-        // Biarkan library menghasilkan kode resmi WhatsApp. Jangan memaksa kode kustom.
-        const code = await this.socket.requestPairingCode(number)
-        this.logger.info({ number }, 'Kode pairing berhasil diminta dari WhatsApp')
-        this.onPairingCode(code)
-      } catch (error) {
-        this.pairingRequested = false
-        this.logger.error({ err: error }, 'Gagal meminta pairing code')
-      }
+  async requestPairingCode(socket, state) {
+    const number = normalizePhoneNumber(this.config.connection.pairingNumber)
+    if (!number) {
+      this.logger.error('Nomor pairing belum diatur pada config.js')
+      return
     }
+
+    if (this.pairingRequested || state.creds.registered || socket !== this.socket) return
+
+    this.pairingRequested = true
+    this.logger.info({ number }, 'Meminta pairing code resmi dari WhatsApp')
+
+    try {
+      const code = await socket.requestPairingCode(number)
+      if (socket !== this.socket || this.stopped) return
+      this.onPairingCode(code)
+    } catch (error) {
+      this.pairingRequested = false
+      this.logger.error({ err: error }, 'Permintaan pairing code ditolak sebelum kode diterbitkan')
+    }
+  }
+
+  async handleConnectionUpdate(update, state, socket) {
+    const { connection, lastDisconnect } = update
+    if (socket !== this.socket || this.stopped) return
 
     if (connection === 'open') {
       this.reconnectAttempts = 0
@@ -107,29 +108,35 @@ export class ConnectionManager {
       return
     }
 
-    if (connection !== 'close' || this.stopped) return
+    if (connection !== 'close') return
 
     const statusCode = getStatusCode(lastDisconnect)
     const loggedOut = statusCode === DisconnectReason.loggedOut
     const maxAttempts = this.config.connection.reconnect.maxAttempts
 
+    if (statusCode === 405 && !state.creds.registered) {
+      this.logger.error(
+        { statusCode },
+        'Handshake 405 sebelum pairing. Bot berhenti agar tidak membuat loop; periksa versi library atau tunggu perbaikan protokol.'
+      )
+      return
+    }
+
     if (loggedOut) {
-      this.logger.error({ statusCode }, 'Session keluar. Hapus hanya storage/session lalu lakukan pairing ulang.')
+      this.logger.error({ statusCode }, 'Session keluar. Backup lalu hapus hanya storage/session sebelum pairing ulang.')
       return
     }
 
     if (this.reconnectAttempts >= maxAttempts) {
-      this.logger.error(
-        { statusCode, maxAttempts },
-        'Batas reconnect tercapai. Periksa jaringan dan session sebelum mencoba lagi.'
-      )
+      this.logger.error({ statusCode, maxAttempts }, 'Batas reconnect tercapai. Bot berhenti tanpa loop.')
       return
     }
 
     this.reconnectAttempts += 1
     const delayMs = this.config.connection.reconnect.baseDelayMs * this.reconnectAttempts
-    this.logger.warn({ statusCode, attempt: this.reconnectAttempts, delayMs }, 'Koneksi putus; mencoba lagi')
-    await wait(delayMs)
-    if (!this.stopped) await this.connect()
+    this.logger.warn({ statusCode, attempt: this.reconnectAttempts, delayMs }, 'Koneksi putus; menjadwalkan reconnect')
+    setTimeout(() => {
+      if (!this.stopped && socket === this.socket) void this.connect()
+    }, delayMs)
   }
 }

@@ -23,10 +23,8 @@ async function main() {
     logger,
     onMessages: routeMessage,
     onPairingCode: code => {
-      logger.info(
-        { code },
-        'PAIRING CODE dibuat. Buka WhatsApp > Perangkat tertaut > Tautkan dengan nomor telepon.'
-      )
+      logger.info(`PAIRING CODE: ${code}`)
+      logger.info('Masukkan kode ini di WhatsApp > Perangkat tertaut > Tautkan dengan nomor telepon.')
     }
   })
 
