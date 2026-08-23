@@ -66,7 +66,9 @@ export class ConnectionManager {
     })
 
     this.socket.ev.on('creds.update', saveCreds)
-    this.socket.ev.on('messages.upsert', this.onMessages)
+    this.socket.ev.on('messages.upsert', update =>
+      this.onMessages({ socket: this.socket, messages: update.messages })
+    )
     this.socket.ev.on('connection.update', update => this.handleConnectionUpdate(update, state))
   }
 
