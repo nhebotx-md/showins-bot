@@ -1,0 +1,22 @@
+{
+  "name": "showins-bot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Base WhatsApp bot modular untuk Termux berbasis Baileys mod Itsukichann.",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "check": "node --check src/index.js && node --check src/core/connection-manager.js",
+    "test": "node --test --test-force-exit",
+    "inspect": "node scripts/inspect-project.js"
+  },
+  "dependencies": {
+    "@itsukichan/baileys": "github:Itsukichann/Baileys#2071f8a8604ec56666177984c6f4a18df8ed192b",
+    "pino": "^9.6.0"
+  }
+}
