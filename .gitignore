@@ -1,7 +1,7 @@
 node_modules/
 storage/session/
 storage/logs/
-config.js
+/config.js
 .env
 .DS_Store
 coverage/
