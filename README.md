@@ -35,12 +35,11 @@ showins-bot/
 ```bash
 git clone https://github.com/nhebotx-md/showins-bot.git
 cd showins-bot
-cp config.example.js config.js
-npm install --omit=dev
+bash scripts/install-termux.sh
 npm start
 ```
 
-Sebelum menjalankan, edit `config.js` dan isi `connection.pairingNumber` dengan nomor akun WhatsApp utama Anda dalam format `628xxxxxxxxxx`.
+Installer membuat `config.js` jika belum ada, memasang dependency, dan menjalankan pemeriksaan awal. Sebelum `npm start`, edit `config.js` dan isi `connection.pairingNumber` dengan nomor akun WhatsApp utama Anda dalam format `628xxxxxxxxxx`.
 
 Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memahami folder dan cara membuat fitur baru, buka [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 

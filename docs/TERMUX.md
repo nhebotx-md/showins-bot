@@ -30,16 +30,15 @@ Showins Bot membutuhkan Node.js 20 atau lebih baru. Jika perintah di atas sudah 
 ```bash
 git clone https://github.com/nhebotx-md/showins-bot.git
 cd showins-bot
-cp config.example.js config.js
+bash scripts/install-termux.sh
 nano config.js
 ```
 
-Isi `pairingNumber` memakai nomor WhatsApp utama dengan format `628xxxxxxxxxx`, tanpa tanda tambah, spasi, atau nol di depan.
+Installer akan memasang dependency, membuat `config.js` bila belum ada, dan menjalankan pemeriksaan dasar. Isi `pairingNumber` memakai nomor WhatsApp utama dengan format `628xxxxxxxxxx`, tanpa tanda tambah, spasi, atau nol di depan.
 
 ## 3. Pasang dependency dan jalankan
 
 ```bash
-npm install --omit=dev
 npm start
 ```
 
