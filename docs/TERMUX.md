@@ -44,6 +44,20 @@ npm start
 
 Saat kode pairing tampil, buka WhatsApp Business/Messenger utama → **Perangkat tertaut** → **Tautkan perangkat** → **Tautkan dengan nomor telepon**, lalu masukkan kode terbaru. Jangan gunakan kode kustom atau kode dari percobaan lama.
 
+## Memperbarui source tanpa menghapus session
+
+Jika bot sudah pernah terhubung, gunakan pembaruan berikut dari dalam Ubuntu proot. Perintah ini mengambil source terbaru dan memasang dependency ItsLiaaa Baileys tanpa mengubah `config.js` atau `storage/session/`.
+
+```bash
+cd /root/showins-bot
+git pull --ff-only
+npm install --omit=dev --no-audit --no-fund
+npm run check
+npm test
+```
+
+Jangan memindahkan atau menghapus `storage/session/` selama log masih menampilkan `CONNECTED`. Cadangkan session hanya apabila WhatsApp benar-benar logout atau Anda ingin menautkan akun lain.
+
 ## 4. Menjalankan di latar belakang
 
 Keluar ke Termux utama dengan `exit`, lalu jalankan:

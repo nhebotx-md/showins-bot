@@ -10,7 +10,7 @@ export default {
     await sendMenu({
       title: config.bot.name,
       text: `Base bot siap digunakan.\n\nPerintah tersedia:\n${commands}`,
-      footer: 'Showins Bot • Baileys mod edge',
+      footer: 'Showins Bot • ItsLiaaa Baileys',
       options: [
         { label: 'Cek status', id: `${config.bot.prefix}status` },
         { label: 'Uji respons', id: `${config.bot.prefix}ping` }

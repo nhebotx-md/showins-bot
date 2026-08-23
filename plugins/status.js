@@ -1,3 +1,5 @@
+import { BAILEYS_INFO } from '../src/core/baileys.js'
+
 export default {
   name: 'status',
   description: 'Menampilkan status dasar runtime.',
@@ -10,7 +12,7 @@ export default {
         `Mode: ${config.bot.mode}`,
         `Node: ${process.version}`,
         `Uptime: ${uptime} detik`,
-        'Library: Itsukichann Baileys mod edge'
+        `Library: ${BAILEYS_INFO.displayName} ${BAILEYS_INFO.version}`
       ].join('\n')
     )
   }

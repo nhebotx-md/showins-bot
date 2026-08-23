@@ -22,7 +22,7 @@ showins-bot/
 ├── config.js             # Pengaturan pribadi Anda (tidak masuk Git)
 ├── plugins/              # Tambahkan fitur bot di sini
 ├── src/
-│   ├── core/             # Koneksi, session, router perintah, dan loader plugin
+│   ├── core/             # Adapter Baileys, koneksi, session, router, dan loader plugin
 │   ├── services/         # Pembantu pesan kaya dan layanan bersama
 │   └── index.js          # Titik mulai bot
 ├── storage/session/      # Session WhatsApp (tidak masuk Git)
@@ -76,7 +76,18 @@ npm test
 npm run inspect
 ```
 
-Pengujian memastikan nomor pairing dibersihkan dengan benar, plugin dasar termuat, source tidak mengirim kode pairing kustom, serta dependency mod menyediakan API yang dipakai bot.
+`npm run check` memeriksa sintaks seluruh berkas JavaScript di `src/`, `plugins/`, dan `test/`. Pengujian memastikan nomor pairing dibersihkan dengan benar, plugin dasar termuat, source tidak mengirim kode pairing kustom, adapter pusat tetap menunjuk **ItsLiaaa Baileys `0.3.18-final`**, serta menu interaktif selalu memiliki fallback teks.
+
+## Pengembangan dengan ItsLiaaa Baileys
+
+Semua import koneksi WhatsApp dipusatkan pada `src/core/baileys.js`. Ketika akan memakai kemampuan library—misalnya media, grup, album, atau interactive/native-flow message—gunakan adapter layanan di `src/services/` atau tambahkan adapter baru. Jangan mengimpor library langsung dari plugin agar perubahan API dapat diaudit di satu tempat.
+
+| Kebutuhan | Lokasi pengembangan |
+|---|---|
+| Session, pairing, reconnect | `src/core/connection-manager.js` |
+| Import dan versi library | `src/core/baileys.js` |
+| Quick reply dan fallback | `src/services/rich-messages.js` |
+| Perintah bot | `plugins/` |
 
 ## Batas penggunaan
 

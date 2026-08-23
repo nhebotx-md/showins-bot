@@ -4,11 +4,14 @@ import path from 'node:path'
 const required = [
   'config.example.js',
   'src/index.js',
+  'src/core/baileys.js',
   'src/core/connection-manager.js',
   'src/core/command-router.js',
   'src/core/plugin-loader.js',
+  'src/services/rich-messages.js',
   'plugins/menu.js',
-  'docs/TERMUX.md'
+  'docs/TERMUX.md',
+  'test/rich-messages.test.js'
 ]
 
 const missing = []

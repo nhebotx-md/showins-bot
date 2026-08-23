@@ -5,7 +5,7 @@ import {
   makeCacheableSignalKeyStore,
   makeWASocket,
   useMultiFileAuthState
-} from '@itsliaaa/baileys'
+} from './baileys.js'
 import pino from 'pino'
 import { normalizePhoneNumber } from './config.js'
 
@@ -45,7 +45,7 @@ export class ConnectionManager {
     const { state, saveCreds } = await useMultiFileAuthState(this.config.connection.authDir)
     const browser = this.config.connection.browser || {}
 
-    this.logger.info('Membuat koneksi WhatsApp dengan versi kompatibel bawaan library')
+    this.logger.info('Membuat koneksi WhatsApp dengan versi kompatibel bawaan ItsLiaaa Baileys')
 
     // Jangan gunakan pencarian versi Web dinamis di sini. Server WhatsApp dapat
     // menolak versi Web yang baru dirilis sebelum Baileys mod menyesuaikannya.
