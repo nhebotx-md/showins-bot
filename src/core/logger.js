@@ -56,6 +56,12 @@ function boxBorder(position) {
   return position === 'top' ? '╭──────────────────────────────────────────────────────╮' : '╰──────────────────────────────────────────────────────╯'
 }
 
+function maskTarget(value = '') {
+  const digits = String(value).replace(/\D/g, '')
+  if (digits.length < 8) return 'TARGET'
+  return `${digits.slice(0, 4)}••••${digits.slice(-3)}`
+}
+
 function formatContext(context = {}) {
   const safeEntries = Object.entries(context)
     .filter(([key, value]) => key !== 'err' && value !== undefined && value !== null)
@@ -92,17 +98,17 @@ export function createLogger() {
 
   const writeActivity = (type, context = {}) => {
     const source = CHAT_SOURCES[context.source] || CHAT_SOURCES.private
-    const direction = type === 'command' ? 'IN ' : 'OUT'
+    const direction = type === 'command' ? 'USER → BOT' : 'BOT  → USER'
     const directionColor = type === 'command' ? 'green' : 'blue'
-    const roleOrResult = type === 'command'
-      ? pad(context.role || 'guest', 10).toUpperCase()
-      : pad(context.type === 'interactive' ? 'MENU' : 'TEXT', 10)
+    const contextOrDelivery = type === 'command'
+      ? `${source.label} · ${(context.role || 'guest').toUpperCase()}`
+      : `DELIVERED → ${context.source === 'private' ? maskTarget(context.target || context.from) : source.label}`
     const action = type === 'command'
       ? context.command || '-'
       : context.type === 'interactive'
-        ? `${context.options || 0} KATEGORI`
-        : `${context.chars || 0} KARAKTER`
-    const line = `${color(getTime(), 'dim', colorsEnabled)}  ${color(direction, directionColor, colorsEnabled)}  ${color(pad(source.label, 8), source.color, colorsEnabled)} ${color(roleOrResult, 'white', colorsEnabled)}  ${color(action, type === 'command' ? 'green' : 'blue', colorsEnabled)}`
+        ? 'INTERACTIVE MENU'
+        : `TEXT / ${context.chars || 0} CHAR`
+    const line = `${color(getTime(), 'dim', colorsEnabled)}  ${color(pad(direction, 12), directionColor, colorsEnabled)}  ${color(pad(contextOrDelivery, 24), type === 'command' ? source.color : 'blue', colorsEnabled)} ${color(action, type === 'command' ? 'green' : 'blue', colorsEnabled)}`
     writeLine(line)
   }
 
@@ -127,7 +133,7 @@ export function createLogger() {
     writeLine(color(boxLine(firstRow), 'cyan', colorsEnabled))
     writeLine(color(boxLine(`${secondRow} │ TOTAL ${plugins.length}`), 'cyan', colorsEnabled))
     writeLine(color('├─ ACTIVITY LEDGER ─────────────────────────────────────┤', 'cyan', colorsEnabled))
-    writeLine(color(boxLine('TIME      DIR  SOURCE    ROLE / RESULT  ACTION'), 'cyan', colorsEnabled))
+    writeLine(color(boxLine('TIME      FLOW          CONTEXT / DELIVERY        ACTION'), 'cyan', colorsEnabled))
     writeLine(color(boxBorder('bottom'), 'cyan', colorsEnabled))
   }
 

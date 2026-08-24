@@ -26,14 +26,16 @@ test('logger aktivitas menampilkan event command dan respons dengan label sumber
     const logger = createLogger()
     logger.command({ source: 'group', role: 'owner', command: '.users' })
     logger.reply({ source: 'group', role: 'owner', command: '.users', type: 'text', chars: 42 })
+    logger.reply({ source: 'private', target: '6281234567890@s.whatsapp.net', type: 'interactive' })
   } finally {
     console.log = originalLog
   }
 
   const plainLines = lines.map(line => line.replace(/\u001B\[[0-?]*[ -/]*[@-~]/g, ''))
-  assert.equal(plainLines.length, 2)
-  assert.match(plainLines[0], /IN\s+GROUP\s+OWNER\s+\.users/)
-  assert.match(plainLines[1], /OUT\s+GROUP\s+TEXT\s+42 KARAKTER/)
+  assert.equal(plainLines.length, 3)
+  assert.match(plainLines[0], /USER → BOT\s+GROUP · OWNER\s+\.users/)
+  assert.match(plainLines[1], /BOT  → USER\s+DELIVERED → GROUP\s+TEXT \/ 42 CHAR/)
+  assert.match(plainLines[2], /DELIVERED → 6281••••890\s+INTERACTIVE MENU/)
 })
 
 test('panel Command Ledger menampilkan total plugin dan count setiap kategori', () => {

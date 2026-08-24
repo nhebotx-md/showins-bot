@@ -113,11 +113,11 @@ Semua log terminal dikendalikan dari satu file: `src/core/logger.js`. Saat start
 | Bagian terminal | Makna |
 |---|---|
 | `CATEGORY INVENTORY` | Count plugin pada Utama, Tools, Fun, Grup, Media, Owner, dan Sistem, serta total keseluruhannya. |
-| `TIME / DIR / SOURCE / ROLE / ACTION` | Tabel aktivitas command. `IN` berarti command masuk; `OUT` berarti respons bot. |
-| `PRIVATE / GROUP / CHANNEL` | Asal command dari chat pribadi, grup, atau channel/newsletter. |
+| `TIME / FLOW / CONTEXT-DELIVERY / ACTION` | Tabel aktivitas command. `USER → BOT` berarti bot menerima command; `BOT → USER` berarti bot berhasil membalas. |
+| `PRIVATE / GROUP / CHANNEL` | Pada baris masuk, menunjukkan asal command serta role pengirim. Pada baris keluar, logger menampilkan `DELIVERED → target`. |
 | `CONNECTION` | Status koneksi ringkas, termasuk connecting, pairing, connected, dan reconnecting. |
 
-Setiap baris aktivitas menampilkan sumber chat, role pengirim atau tipe respons, serta command/hasilnya. Warna ANSI aktif otomatis pada terminal yang mendukungnya; atur `NO_COLOR=1` bila menginginkan keluaran tanpa warna.
+Setiap command menghasilkan pasangan visual. Baris pertama menunjukkan **USER → BOT**, sumber dan role, lalu command. Baris kedua hanya muncul setelah pengiriman sukses sebagai **BOT → USER** dengan status `DELIVERED → target`; nomor target chat pribadi disamarkan agar tidak memenuhi terminal. Warna ANSI aktif otomatis pada terminal yang mendukungnya; atur `NO_COLOR=1` bila menginginkan keluaran tanpa warna.
 
 ## Pengembangan dengan ItsLiaaa Baileys
 

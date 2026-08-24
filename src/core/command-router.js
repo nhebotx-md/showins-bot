@@ -57,11 +57,19 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
 
       // Hanya command yang melewati parser ini yang dicatat. Pesan chat biasa
       // berhenti pada continue di atas dan tidak pernah menghasilkan log terminal.
-      logger.command?.({ source, role, from: senderNumber || 'LID', command: commandLabel })
+      logger.command?.({ source, role, from: senderNumber || 'LID', target: jid, command: commandLabel })
 
       const reply = async text => {
         const result = await socket.sendMessage(jid, { text }, { quoted: message })
-        logger.reply?.({ source, role, command: commandLabel, type: 'text', chars: String(text).length })
+        logger.reply?.({
+          source,
+          role,
+          from: senderNumber || 'LID',
+          target: jid,
+          command: commandLabel,
+          type: 'text',
+          chars: String(text).length
+        })
         return result
       }
       const sendMenu = async data => {
@@ -69,6 +77,8 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
         logger.reply?.({
           source,
           role,
+          from: senderNumber || 'LID',
+          target: jid,
           command: commandLabel,
           type: 'interactive',
           options: Array.isArray(data.options) ? data.options.length : 0
