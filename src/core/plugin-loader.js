@@ -35,12 +35,10 @@ export async function loadPlugins({ logger, pluginDir = defaultPluginDir }) {
       const moduleUrl = pathToFileURL(path.join(pluginDir, file)).href
       const plugin = validatePlugin((await import(moduleUrl)).default, file)
       plugins.push(plugin)
-      logger.info({ plugin: plugin.name, category: plugin.category, access: plugin.access, commands: plugin.commands }, 'Plugin dimuat')
     } catch (error) {
       logger.error({ err: error, file }, 'Plugin dilewati karena gagal dimuat')
     }
   }
 
-  logger.info({ total: plugins.length }, 'Sistem plugin siap')
   return plugins
 }

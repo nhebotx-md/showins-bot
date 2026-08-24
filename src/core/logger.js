@@ -19,10 +19,22 @@ const LABELS = {
 }
 
 const CHAT_SOURCES = Object.freeze({
-  private: { label: 'PRIVATE', color: 'cyan', marker: '◆' },
-  group: { label: 'GROUP', color: 'magenta', marker: '◆' },
-  channel: { label: 'CHANNEL', color: 'yellow', marker: '◆' }
+  private: { label: 'PRIVATE', color: 'cyan' },
+  group: { label: 'GROUP', color: 'magenta' },
+  channel: { label: 'CHANNEL', color: 'yellow' }
 })
+
+const CATEGORY_LABELS = Object.freeze({
+  main: 'UTAMA',
+  tools: 'TOOLS',
+  fun: 'FUN',
+  group: 'GRUP',
+  media: 'MEDIA',
+  owner: 'OWNER',
+  system: 'SISTEM'
+})
+
+const CATEGORY_ORDER = Object.freeze(['main', 'tools', 'fun', 'group', 'media', 'owner', 'system'])
 
 function color(text, name, enabled) {
   return enabled ? `${ANSI[name] || ''}${text}${ANSI.reset}` : text
@@ -30,6 +42,18 @@ function color(text, name, enabled) {
 
 function getTime() {
   return new Date().toLocaleTimeString('id-ID', { hour12: false })
+}
+
+function pad(value, length) {
+  return String(value ?? '').slice(0, length).padEnd(length)
+}
+
+function boxLine(content = '') {
+  return `│ ${content.padEnd(52).slice(0, 52)} │`
+}
+
+function boxBorder(position) {
+  return position === 'top' ? '╭──────────────────────────────────────────────────────╮' : '╰──────────────────────────────────────────────────────╯'
 }
 
 function formatContext(context = {}) {
@@ -68,18 +92,64 @@ export function createLogger() {
 
   const writeActivity = (type, context = {}) => {
     const source = CHAT_SOURCES[context.source] || CHAT_SOURCES.private
-    const event = type === 'command' ? 'CMD' : 'RSP'
-    const eventColor = type === 'command' ? 'green' : 'blue'
-    const sourceLabel = color(`${source.marker} ${source.label}`, source.color, colorsEnabled)
-    const eventLabel = color(event, eventColor, colorsEnabled)
-    const details = formatContext(context)
-    const line = `${color(`[${getTime()}]`, 'dim', colorsEnabled)} ${color('SHOWINS', 'white', colorsEnabled)} ${eventLabel} ${sourceLabel}${details}`
+    const direction = type === 'command' ? 'IN ' : 'OUT'
+    const directionColor = type === 'command' ? 'green' : 'blue'
+    const roleOrResult = type === 'command'
+      ? pad(context.role || 'guest', 10).toUpperCase()
+      : pad(context.type === 'interactive' ? 'MENU' : 'TEXT', 10)
+    const action = type === 'command'
+      ? context.command || '-'
+      : context.type === 'interactive'
+        ? `${context.options || 0} KATEGORI`
+        : `${context.chars || 0} KARAKTER`
+    const line = `${color(getTime(), 'dim', colorsEnabled)}  ${color(direction, directionColor, colorsEnabled)}  ${color(pad(source.label, 8), source.color, colorsEnabled)} ${color(roleOrResult, 'white', colorsEnabled)}  ${color(action, type === 'command' ? 'green' : 'blue', colorsEnabled)}`
     writeLine(line)
+  }
+
+  const startup = ({ botName = 'Showins Bot', engine = 'ItsLiaaa', plugins = [], userCount = 0 } = {}) => {
+    const categoryCounts = Object.fromEntries(CATEGORY_ORDER.map(category => [category, 0]))
+    for (const plugin of plugins) {
+      if (Object.hasOwn(categoryCounts, plugin.category)) categoryCounts[plugin.category] += 1
+    }
+
+    const firstRow = CATEGORY_ORDER.slice(0, 4)
+      .map(category => `${pad(CATEGORY_LABELS[category], 7)} ${String(categoryCounts[category]).padStart(2)}`)
+      .join(' │ ')
+    const secondRow = CATEGORY_ORDER.slice(4)
+      .map(category => `${pad(CATEGORY_LABELS[category], 7)} ${String(categoryCounts[category]).padStart(2)}`)
+      .join(' │ ')
+
+    writeLine(color(boxBorder('top'), 'cyan', colorsEnabled))
+    writeLine(color(boxLine(`${botName.toUpperCase()}  /  COMMAND LEDGER`), 'cyan', colorsEnabled))
+    writeLine(color(boxLine(`STATUS  BOOTING        ENGINE  ${engine.toUpperCase()}`), 'cyan', colorsEnabled))
+    writeLine(color(boxLine(`PLUGINS ${plugins.length} ACTIVE       USERS   ${userCount} REGISTERED`), 'cyan', colorsEnabled))
+    writeLine(color('├─ CATEGORY INVENTORY ──────────────────────────────────┤', 'cyan', colorsEnabled))
+    writeLine(color(boxLine(firstRow), 'cyan', colorsEnabled))
+    writeLine(color(boxLine(`${secondRow} │ TOTAL ${plugins.length}`), 'cyan', colorsEnabled))
+    writeLine(color('├─ ACTIVITY LEDGER ─────────────────────────────────────┤', 'cyan', colorsEnabled))
+    writeLine(color(boxLine('TIME      DIR  SOURCE    ROLE / RESULT  ACTION'), 'cyan', colorsEnabled))
+    writeLine(color(boxBorder('bottom'), 'cyan', colorsEnabled))
+  }
+
+  const connection = ({ state, detail = '' } = {}) => {
+    const stateColor = state === 'CONNECTED' ? 'green' : state === 'FAILED' ? 'red' : state === 'RECONNECTING' ? 'yellow' : 'blue'
+    const line = `${color(getTime(), 'dim', colorsEnabled)}  ${color('SYS', stateColor, colorsEnabled)}  ${color(pad('CONNECTION', 8), 'white', colorsEnabled)} ${color(pad(state || 'UPDATE', 16), stateColor, colorsEnabled)} ${detail}`
+    writeLine(line)
+  }
+
+  const pairing = code => {
+    writeLine(color('╭─ PAIRING REQUIRED ────────────────────────────────────╮', 'yellow', colorsEnabled))
+    writeLine(color(boxLine(`CODE  ${code}`), 'yellow', colorsEnabled))
+    writeLine(color(boxLine('WhatsApp > Perangkat tertaut > Tautkan dengan nomor'), 'yellow', colorsEnabled))
+    writeLine(color('╰──────────────────────────────────────────────────────╯', 'yellow', colorsEnabled))
   }
 
   return {
     ...Object.fromEntries(Object.keys(LABELS).map(level => [level, (...args) => write(level, ...args)])),
     command: context => writeActivity('command', context),
-    reply: context => writeActivity('reply', context)
+    reply: context => writeActivity('reply', context),
+    startup,
+    connection,
+    pairing
   }
 }

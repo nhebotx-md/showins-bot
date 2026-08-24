@@ -88,6 +88,8 @@ Resolver identitas memprioritaskan `participantAlt` dan `remoteJidAlt` sebelum J
 
 ## Logger aktivitas command
 
-`src/core/logger.js` adalah satu-satunya modul yang membentuk keluaran terminal. Router memanggil `logger.command()` hanya setelah parser menemukan command berprefix, dan memanggil `logger.reply()` hanya setelah respons teks atau interaktif berhasil dikirim. Karena pesan biasa berhenti sebelum tahap parser command, pesan tersebut tidak menghasilkan log aktivitas.
+`src/core/logger.js` adalah satu-satunya modul yang membentuk keluaran terminal. Setelah loader selesai, `logger.startup()` membuat panel **Command Ledger** dengan jumlah keseluruhan plugin dan inventory jumlah plugin per kategori dari registry. Plugin loader tidak menulis satu baris untuk setiap plugin.
 
-Sumber chat ditentukan dari JID tujuan: `@s.whatsapp.net`/`@lid` sebagai private, `@g.us` sebagai group, dan `@newsletter` sebagai channel. Logger memakai label `CMD` dan `RSP` serta warna ANSI untuk keterbacaan pada Termux; pengaturan lingkungan `NO_COLOR=1` menonaktifkan warna tanpa mengubah struktur data log.
+Router memanggil `logger.command()` hanya setelah parser menemukan command berprefix, dan memanggil `logger.reply()` hanya setelah respons teks atau interaktif berhasil dikirim. Karena pesan biasa berhenti sebelum tahap parser command, pesan tersebut tidak menghasilkan log aktivitas. Koneksi memakai `logger.connection()` dan pairing memakai `logger.pairing()`, sehingga status sistem tetap ringkas dan tidak bercampur dengan tabel command.
+
+Sumber chat ditentukan dari JID tujuan: `@s.whatsapp.net`/`@lid` sebagai private, `@g.us` sebagai group, dan `@newsletter` sebagai channel. Tabel aktivitas memakai kolom `TIME`, `DIR`, `SOURCE`, `ROLE / RESULT`, dan `ACTION`; pengaturan lingkungan `NO_COLOR=1` menonaktifkan warna ANSI tanpa mengubah struktur data log.

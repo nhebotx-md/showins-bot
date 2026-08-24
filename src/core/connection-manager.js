@@ -45,7 +45,7 @@ export class ConnectionManager {
     const { state, saveCreds } = await useMultiFileAuthState(this.config.connection.authDir)
     const browser = this.config.connection.browser || {}
 
-    this.logger.info('Membuat koneksi WhatsApp dengan versi kompatibel bawaan ItsLiaaa Baileys')
+    this.logger.connection?.({ state: 'CONNECTING', detail: 'ItsLiaaa / kompatibel' })
 
     // Jangan gunakan pencarian versi Web dinamis di sini. Server WhatsApp dapat
     // menolak versi Web yang baru dirilis sebelum Baileys mod menyesuaikannya.
@@ -81,7 +81,7 @@ export class ConnectionManager {
     if (this.pairingRequested || state.creds.registered || socket !== this.socket) return
 
     this.pairingRequested = true
-    this.logger.info({ number }, 'Meminta pairing code resmi dari WhatsApp')
+    this.logger.connection?.({ state: 'PAIRING', detail: 'Meminta kode resmi WhatsApp' })
 
     try {
       await delay(1_500)
@@ -101,7 +101,7 @@ export class ConnectionManager {
     if (connection === 'open') {
       this.reconnectAttempts = 0
       this.pairingRequested = false
-      this.logger.info('CONNECTED — Showins Bot siap menerima perintah')
+      this.logger.connection?.({ state: 'CONNECTED', detail: 'Showins Bot siap menerima perintah' })
       return
     }
 
@@ -136,7 +136,10 @@ export class ConnectionManager {
 
     this.reconnectAttempts += 1
     const delayMs = this.config.connection.reconnect.baseDelayMs * this.reconnectAttempts
-    this.logger.warn({ statusCode, attempt: this.reconnectAttempts, delayMs }, 'Koneksi putus; menjadwalkan reconnect')
+    this.logger.connection?.({
+      state: 'RECONNECTING',
+      detail: `attempt ${this.reconnectAttempts}/${maxAttempts} · ${delayMs}ms · code ${statusCode || '-'}`
+    })
     setTimeout(() => {
       if (!this.stopped && socket === this.socket) void this.connect()
     }, delayMs)

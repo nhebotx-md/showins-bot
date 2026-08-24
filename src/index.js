@@ -19,7 +19,12 @@ async function main() {
   const plugins = await loadPlugins({ logger })
   const userStore = createUserStore({ filePath: config.data?.userStorePath || './storage/users.json' })
   await userStore.load()
-  logger.info({ total: userStore.list().length }, 'Data pengguna dimuat')
+  logger.startup({
+    botName: config.bot.name,
+    engine: 'ItsLiaaa',
+    plugins,
+    userCount: userStore.list().length
+  })
 
   const routeMessage = createCommandRouter({ config, plugins, logger, userStore })
 
@@ -28,8 +33,7 @@ async function main() {
     logger,
     onMessages: routeMessage,
     onPairingCode: code => {
-      logger.info(`PAIRING CODE: ${code}`)
-      logger.info('Masukkan kode ini di WhatsApp > Perangkat tertaut > Tautkan dengan nomor telepon.')
+      logger.pairing(code)
     }
   })
 

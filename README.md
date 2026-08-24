@@ -108,16 +108,16 @@ npm run inspect
 
 ## Logger terminal Termux
 
-Semua log terminal dikendalikan dari satu file: `src/core/logger.js`. Logger aktivitas hanya bekerja setelah router mengenali command berprefix, sehingga chat biasa, media biasa, atau percakapan yang bukan command **tidak dicetak** ke terminal.
+Semua log terminal dikendalikan dari satu file: `src/core/logger.js`. Saat startup, desain **Command Ledger** menampilkan total plugin aktif dan count pada seluruh kategori—termasuk kategori yang masih bernilai `0`—dalam satu panel ringkas. Baris log per-plugin tidak lagi ditampilkan. Logger aktivitas hanya bekerja setelah router mengenali command berprefix, sehingga chat biasa, media biasa, atau percakapan yang bukan command **tidak dicetak** ke terminal.
 
-| Label terminal | Makna |
+| Bagian terminal | Makna |
 |---|---|
-| `CMD ◆ PRIVATE` | Command masuk dari chat pribadi. |
-| `CMD ◆ GROUP` | Command masuk dari grup. |
-| `CMD ◆ CHANNEL` | Command masuk dari channel/newsletter. |
-| `RSP` | Respons teks atau interactive menu yang berhasil dikirim bot untuk command tersebut. |
+| `CATEGORY INVENTORY` | Count plugin pada Utama, Tools, Fun, Grup, Media, Owner, dan Sistem, serta total keseluruhannya. |
+| `TIME / DIR / SOURCE / ROLE / ACTION` | Tabel aktivitas command. `IN` berarti command masuk; `OUT` berarti respons bot. |
+| `PRIVATE / GROUP / CHANNEL` | Asal command dari chat pribadi, grup, atau channel/newsletter. |
+| `CONNECTION` | Status koneksi ringkas, termasuk connecting, pairing, connected, dan reconnecting. |
 
-Setiap baris aktivitas menampilkan sumber chat, role pengirim, command, serta metadata respons. Warna ANSI aktif otomatis pada terminal yang mendukungnya; atur `NO_COLOR=1` bila menginginkan keluaran tanpa warna.
+Setiap baris aktivitas menampilkan sumber chat, role pengirim atau tipe respons, serta command/hasilnya. Warna ANSI aktif otomatis pada terminal yang mendukungnya; atur `NO_COLOR=1` bila menginginkan keluaran tanpa warna.
 
 ## Pengembangan dengan ItsLiaaa Baileys
 

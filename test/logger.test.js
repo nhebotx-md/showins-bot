@@ -32,6 +32,36 @@ test('logger aktivitas menampilkan event command dan respons dengan label sumber
 
   const plainLines = lines.map(line => line.replace(/\u001B\[[0-?]*[ -/]*[@-~]/g, ''))
   assert.equal(plainLines.length, 2)
-  assert.match(plainLines[0], /SHOWINS CMD ◆ GROUP/)
-  assert.match(plainLines[1], /SHOWINS RSP ◆ GROUP/)
+  assert.match(plainLines[0], /IN\s+GROUP\s+OWNER\s+\.users/)
+  assert.match(plainLines[1], /OUT\s+GROUP\s+TEXT\s+42 KARAKTER/)
+})
+
+test('panel Command Ledger menampilkan total plugin dan count setiap kategori', () => {
+  const lines = []
+  const originalLog = console.log
+  console.log = line => lines.push(line)
+
+  try {
+    createLogger().startup({
+      botName: 'Showins Bot',
+      engine: 'ItsLiaaa',
+      userCount: 4,
+      plugins: [
+        { category: 'main' },
+        { category: 'tools' },
+        { category: 'tools' },
+        { category: 'owner' }
+      ]
+    })
+  } finally {
+    console.log = originalLog
+  }
+
+  const panel = lines.map(line => line.replace(/\u001B\[[0-?]*[ -/]*[@-~]/g, '')).join('\n')
+  assert.match(panel, /PLUGINS 4 ACTIVE/)
+  assert.match(panel, /USERS   4 REGISTERED/)
+  assert.match(panel, /UTAMA\s+1/)
+  assert.match(panel, /TOOLS\s+2/)
+  assert.match(panel, /OWNER\s+1/)
+  assert.match(panel, /TOTAL 4/)
 })
