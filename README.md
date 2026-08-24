@@ -76,6 +76,8 @@ Bot membaca `bot.ownerNumbers` dari `config.js`; nomor tersebut langsung diangga
 
 Setiap plugin wajib menentukan `access`: `public`, `registered`, `premium`, atau `owner`. Menu tetap dapat dilihat siapa pun, tetapi command yang terkunci diberi penanda peran yang dibutuhkan.
 
+Deteksi identitas mendukung chat pribadi dan grup, termasuk JID alternatif pada mode privasi LID. Command yang dikirim dari akun WhatsApp yang menautkan bot (`fromMe`) selalu diperlakukan sebagai **owner**. Untuk command owner dari nomor lain, nomor tersebut harus ada di `bot.ownerNumbers` dalam format `628...`.
+
 ## Menambah fitur tanpa mengubah inti bot
 
 Buat berkas baru di `plugins/`. Contoh paling kecil:

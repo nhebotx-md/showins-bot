@@ -1,5 +1,5 @@
 import { sendInteractiveMenu } from '../services/rich-messages.js'
-import { canAccess, getAccessLabel, getSenderNumber, resolveUserRole } from './access-control.js'
+import { canAccess, getAccessLabel, getSenderNumber, getSenderNumbers, resolveUserRole } from './access-control.js'
 import { getCategoryIdFromMenuCommand } from './plugin-categories.js'
 
 function parseNativeFlowResponse(message = {}) {
@@ -42,7 +42,7 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
 
   return async ({ socket, messages }) => {
     for (const message of messages) {
-      if (!message.message || message.key.fromMe || message.key.remoteJid === 'status@broadcast') continue
+      if (!message.message || message.key.remoteJid === 'status@broadcast') continue
 
       const parsed = getCommand(getText(message.message), config.bot.prefix)
       if (!parsed?.command) continue
@@ -60,7 +60,8 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
       }
 
       const senderNumber = getSenderNumber(message)
-      const role = resolveUserRole({ config, userStore, senderNumber })
+      const senderNumbers = getSenderNumbers(message)
+      const role = resolveUserRole({ config, userStore, message, senderNumbers })
 
       const context = {
         socket,
@@ -69,6 +70,7 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
         args: categoryId ? [categoryId] : parsed.args,
         command: categoryId ? 'menu' : parsed.command,
         senderNumber,
+        senderNumbers,
         role,
         userStore,
         config,

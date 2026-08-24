@@ -14,20 +14,40 @@ const ROLE_LABELS = Object.freeze({
   owner: 'owner'
 })
 
-export function getSenderNumber(message) {
-  const senderJid = message?.key?.participant || message?.key?.remoteJid || ''
-  return normalizePhoneNumber(senderJid.split('@')[0].split(':')[0])
+function phoneNumberFromJid(jid = '') {
+  const normalizedJid = String(jid).trim().toLowerCase()
+  if (!normalizedJid.endsWith('@s.whatsapp.net') && !normalizedJid.endsWith('@c.us')) return ''
+  return normalizePhoneNumber(normalizedJid.split('@')[0].split(':')[0])
 }
 
-export function resolveUserRole({ config, userStore, senderNumber }) {
-  const normalizedNumber = normalizePhoneNumber(senderNumber)
+export function getSenderNumbers(message) {
+  const key = message?.key || {}
+  const candidates = [key.participantAlt, key.remoteJidAlt, key.participant, key.remoteJid]
+    .map(phoneNumberFromJid)
+    .filter(number => number.length >= 8)
+
+  return [...new Set(candidates)]
+}
+
+export function getSenderNumber(message) {
+  return getSenderNumbers(message)[0] || ''
+}
+
+export function resolveUserRole({ config, userStore, message, senderNumber, senderNumbers }) {
+  // WhatsApp menandai pesan yang dikirim dari akun yang menautkan bot sebagai
+  // fromMe. Command dari akun tersebut harus selalu diperlakukan sebagai owner.
+  if (message?.key?.fromMe) return 'owner'
+
+  const normalizedNumbers = (senderNumbers || (senderNumber ? [senderNumber] : getSenderNumbers(message)))
+    .map(normalizePhoneNumber)
+    .filter(number => number.length >= 8)
   const ownerNumbers = new Set((config.bot.ownerNumbers || []).map(normalizePhoneNumber))
 
-  if (ownerNumbers.has(normalizedNumber)) return 'owner'
+  if (normalizedNumbers.some(number => ownerNumbers.has(number))) return 'owner'
 
-  const user = userStore?.get(normalizedNumber)
-  if (user?.premium) return 'premium'
-  if (user) return 'registered'
+  const users = normalizedNumbers.map(number => userStore?.get(number)).filter(Boolean)
+  if (users.some(user => user.premium)) return 'premium'
+  if (users.length > 0) return 'registered'
   return 'guest'
 }
 

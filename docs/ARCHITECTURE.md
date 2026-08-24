@@ -82,3 +82,5 @@ export default {
 ```
 
 Nomor yang tercantum dalam `bot.ownerNumbers` pada `config.js` selalu berperan sebagai owner dan tidak ditulis ulang ke database pengguna. Pengguna lain dapat menjalankan `.register` untuk mendaftarkan nomornya; owner dapat memakai `.adduser`, `.addpremium`, `.delpremium`, serta `.users`. Database `storage/users.json` dibuat lokal, memakai penulisan atomik, dan diabaikan oleh Git.
+
+Resolver identitas memprioritaskan `participantAlt` dan `remoteJidAlt` sebelum JID biasa agar nomor telepon tetap ditemukan ketika WhatsApp memakai identifier LID. Pesan yang ditandai `fromMe` diperlakukan sebagai owner karena berasal dari akun yang menautkan bot. Seluruh keputusan akses dilakukan oleh router sebelum plugin dijalankan.
