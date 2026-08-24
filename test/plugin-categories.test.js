@@ -21,8 +21,10 @@ test('registry hanya menerima kategori plugin Showins yang dikenal', () => {
   assert.equal(isPluginCategory('tidak-ada'), false)
   assert.equal(getPluginCategory('media').label, 'Media')
   assert.equal(getCategoryMenuCommand('fun'), 'catfun')
+  assert.equal(getCategoryMenuCommand('testreply'), 'cattestreply')
   assert.equal(getCategoryIdFromMenuCommand('catgroup'), 'group')
   assert.equal(getCategoryIdFromMenuCommand('catowner'), 'owner')
+  assert.equal(getCategoryIdFromMenuCommand('cattestreply'), 'testreply')
   assert.equal(getCategoryIdFromMenuCommand('catunknown'), null)
 })
 
@@ -41,6 +43,7 @@ test('menu kategori membuat ringkasan dan detail perintah dengan prefix yang ben
 
   assert.match(overview, /\*Utama\* — \.catmain/)
   assert.match(overview, /\*Fun\* — \.catfun/)
+  assert.match(overview, /\*Test Reply\* — \.cattestreply/)
   assert.match(overview, /\*Sistem\* — \.catsystem/)
   assert.equal(guestDetail.category.label, 'Tools')
   assert.match(guestDetail.text, /\*\.ping\*/)

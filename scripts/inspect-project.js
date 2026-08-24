@@ -12,6 +12,7 @@ const required = [
   'src/core/command-router.js',
   'src/core/plugin-loader.js',
   'src/services/rich-messages.js',
+  'src/services/reply-showcase.js',
   'src/services/plugin-menu.js',
   'src/services/user-store.js',
   'scripts/reset-pairing-session.sh',
@@ -20,6 +21,7 @@ const required = [
   'plugins/owner.js',
   'docs/TERMUX.md',
   'docs/ARCHITECTURE.md',
+  'docs/REPLY-LAB.md',
   'test/plugin-categories.test.js',
   'test/category-menu-router.test.js',
   'test/access-control.test.js',
@@ -28,6 +30,8 @@ const required = [
   'test/role-plugins.test.js',
   'test/interactive-command-router.test.js',
   'test/rich-messages.test.js'
+  ,'test/reply-showcase.test.js'
+  ,'test/reply-test-plugins.test.js'
 ]
 
 const missing = []

@@ -24,6 +24,7 @@ test('plugin menu mengirim semua submenu kategori sebagai pilihan interactive me
     { label: 'Utama', id: '.catmain' },
     { label: 'Tools', id: '.cattools' },
     { label: 'Fun', id: '.catfun' },
+    { label: 'Test Reply', id: '.cattestreply' },
     { label: 'Grup', id: '.catgroup' },
     { label: 'Media', id: '.catmedia' },
     { label: 'Owner', id: '.catowner' },

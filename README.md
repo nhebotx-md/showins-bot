@@ -53,7 +53,9 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | `.catfun` | Membuka menu kategori Fun |
 | `.catgroup` | Membuka menu kategori Grup |
 | `.catowner` | Membuka menu kategori Owner |
+| `.cattestreply` | Membuka menu kategori Test Reply |
 | `.cat<kategori>` | Membuka menu kategori lain, misalnya `.cattools` atau `.catsystem` |
+| `.replytest` | Membuka laboratorium untuk menguji gaya reply pesan |
 | `.register` | Mendaftarkan nomor sendiri sebagai pengguna bot |
 | `.ping` | Menguji respons bot |
 | `.status` atau `.info` | Melihat status runtime |
@@ -63,7 +65,7 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | `.delpremium <nomor>` | Mencabut premium — khusus owner |
 | `.users` | Melihat daftar pengguna — khusus owner |
 
-Menu utama memuat submenu untuk seluruh kategori: **Utama**, **Tools**, **Fun**, **Grup**, **Media**, **Owner**, dan **Sistem**. Setiap tombol menjalankan command `cat<kategori>` dan menampilkan menu kategori masing-masing. Kategori yang belum memiliki plugin akan tetap terbuka, tetapi menampilkan pemberitahuan bahwa belum ada fitur aktif.
+Menu utama memuat submenu untuk seluruh kategori: **Utama**, **Tools**, **Fun**, **Test Reply**, **Grup**, **Media**, **Owner**, dan **Sistem**. Setiap tombol menjalankan command `cat<kategori>` dan menampilkan menu kategori masing-masing. Kategori yang belum memiliki plugin akan tetap terbuka, tetapi menampilkan pemberitahuan bahwa belum ada fitur aktif. Lihat [Reply Lab](docs/REPLY-LAB.md) untuk inventaris pola reply dan command uji yang tersedia.
 
 ## Akses owner, premium, dan pengguna
 

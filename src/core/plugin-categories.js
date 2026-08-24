@@ -17,6 +17,12 @@ export const PLUGIN_CATEGORIES = Object.freeze({
     description: 'Fitur hiburan dan interaksi santai.',
     order: 30
   }),
+  testreply: Object.freeze({
+    id: 'testreply',
+    label: 'Test Reply',
+    description: 'Laboratorium uji tampilan dan karakter balasan pesan.',
+    order: 35
+  }),
   group: Object.freeze({
     id: 'group',
     label: 'Grup',

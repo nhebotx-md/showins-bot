@@ -31,7 +31,7 @@ Pesan native-flow/interaktif dibungkus dalam `src/services/rich-messages.js`. Ji
 
 ## Kontrak kategori plugin
 
-Setiap plugin **wajib** memiliki `category` yang terdaftar di `src/core/plugin-categories.js`. Kategori yang tersedia saat ini adalah `main`, `tools`, `fun`, `group`, `media`, `owner`, dan `system`. Menu utama selalu memuat submenu dari seluruh kategori, termasuk kategori yang belum memiliki fitur; hal ini menjaga struktur navigasi tetap konsisten ketika plugin baru ditambahkan.
+Setiap plugin **wajib** memiliki `category` yang terdaftar di `src/core/plugin-categories.js`. Kategori yang tersedia saat ini adalah `main`, `tools`, `fun`, `testreply`, `group`, `media`, `owner`, dan `system`. Menu utama selalu memuat submenu dari seluruh kategori, termasuk kategori yang belum memiliki fitur; hal ini menjaga struktur navigasi tetap konsisten ketika plugin baru ditambahkan.
 
 ```js
 export default {
@@ -45,7 +45,7 @@ export default {
 }
 ```
 
-Plugin `menu` menggunakan `src/services/plugin-menu.js` untuk membuat ringkasan kategori pada `.menu` dan detail perintah pada command `cat<kategori>`. Gunakan ID kategori huruf kecil tanpa spasi: `.catfun`, `.catgroup`, `.catowner`, `.cattools`, atau `.catsystem`. `src/core/command-router.js` mengenali alias tersebut dan meneruskannya ke plugin menu, sehingga setiap kategori memiliki halaman menu sendiri. Respons tombol `quick_reply` native-flow membawa alias yang sama dan diproses tanpa pengguna perlu mengetik ulang perintah.
+Plugin `menu` menggunakan `src/services/plugin-menu.js` untuk membuat ringkasan kategori pada `.menu` dan detail perintah pada command `cat<kategori>`. Gunakan ID kategori huruf kecil tanpa spasi: `.catfun`, `.cattestreply`, `.catgroup`, `.catowner`, `.cattools`, atau `.catsystem`. `src/core/command-router.js` mengenali alias tersebut dan meneruskannya ke plugin menu, sehingga setiap kategori memiliki halaman menu sendiri. Respons tombol `quick_reply` native-flow membawa alias yang sama dan diproses tanpa pengguna perlu mengetik ulang perintah.
 
 ## Membuat plugin baru
 
@@ -85,6 +85,12 @@ export default {
 Nomor yang tercantum dalam `bot.ownerNumbers` pada `config.js` selalu berperan sebagai owner dan tidak ditulis ulang ke database pengguna. Pengguna lain dapat menjalankan `.register` untuk mendaftarkan nomornya; owner dapat memakai `.adduser`, `.addpremium`, `.delpremium`, serta `.users`. Database `storage/users.json` dibuat lokal, memakai penulisan atomik, dan diabaikan oleh Git.
 
 Resolver identitas memprioritaskan `participantAlt` dan `remoteJidAlt` sebelum JID biasa agar nomor telepon tetap ditemukan ketika WhatsApp memakai identifier LID. Pesan yang ditandai `fromMe` diperlakukan sebagai owner karena berasal dari akun yang menautkan bot. Seluruh keputusan akses dilakukan oleh router sebelum plugin dijalankan.
+
+## Test Reply
+
+Kategori `testreply` memuat command yang menguji gaya balasan tanpa menyamar sebagai kontak, pembayaran, katalog, atau kanal pihak lain. Payload tiap gaya dipusatkan di `src/services/reply-showcase.js`; plugin hanya memilih builder yang sesuai. Router menyediakan `sendResponse` untuk respons payload custom dan `react` untuk acknowledgment, sehingga logger tetap mencatat pengiriman berhasil sebagai `BOT → USER`.
+
+Gaya yang tersedia saat ini meliputi teks quoted, context preview, quoted mention, dokumen teks dengan caption, reaksi kemudian konfirmasi, dan native-flow quick reply. Detail inventaris dan batas desain terdapat di [REPLY-LAB.md](REPLY-LAB.md).
 
 ## Logger aktivitas command
 
