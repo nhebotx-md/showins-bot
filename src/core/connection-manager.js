@@ -56,7 +56,6 @@ export class ConnectionManager {
       },
       browser: Browsers.ubuntu(browser.name || 'Chrome'),
       logger: pino({ level: 'silent' }),
-      printQRInTerminal: false,
       markOnlineOnConnect: Boolean(this.config.connection.markOnlineOnConnect),
       syncFullHistory: Boolean(this.config.connection.syncFullHistory),
       connectTimeoutMs: 60_000,
@@ -84,7 +83,7 @@ export class ConnectionManager {
     this.logger.connection?.({ state: 'PAIRING', detail: 'Meminta kode resmi WhatsApp' })
 
     try {
-      await delay(1_500)
+      await delay(500)
       const code = await socket.requestPairingCode(number)
       if (socket !== this.socket || this.stopped) return
       this.onPairingCode(code)
@@ -95,7 +94,7 @@ export class ConnectionManager {
   }
 
   async handleConnectionUpdate(update, state, socket) {
-    const { connection, lastDisconnect } = update
+    const { connection, lastDisconnect, qr } = update
     if (socket !== this.socket || this.stopped) return
 
     if (connection === 'open') {
@@ -105,7 +104,9 @@ export class ConnectionManager {
       return
     }
 
-    if (connection === 'connecting' && this.config.connection.usePairingCode && !state.creds.registered) {
+    // Event QR tetap diterima saat pairing dengan nomor walaupun QR tidak dicetak.
+    // Ini adalah penanda bahwa socket sudah siap menerima requestPairingCode.
+    if (qr && this.config.connection.usePairingCode && !state.creds.registered) {
       void this.requestPairingCode(socket, state)
       return
     }
@@ -120,6 +121,14 @@ export class ConnectionManager {
       this.logger.error(
         { statusCode },
         'Handshake 405 sebelum pairing. Bot berhenti agar tidak membuat loop; periksa versi library atau tunggu perbaikan protokol.'
+      )
+      return
+    }
+
+    if (loggedOut && !state.creds.registered) {
+      this.logger.error(
+        { statusCode },
+        'WhatsApp menolak sesi pairing sebelum registrasi. Jangan membuat loop; verifikasi Node 20+ lalu reset hanya storage/session.'
       )
       return
     }

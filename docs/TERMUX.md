@@ -1,29 +1,18 @@
 # Menjalankan Showins Bot di Termux
 
-Dokumen ini memakai Ubuntu proot karena environment tersebut mudah dipisahkan dari Termux utama.
+Showins Bot dapat dijalankan **langsung di Termux biasa**; Ubuntu proot bukan syarat. Node.js **20 atau lebih baru** tetap wajib digunakan. Ubuntu proot hanya alternatif apabila Anda ingin lingkungan Linux terpisah.
 
-## 1. Pastikan kebutuhan dasar tersedia
+## 1. Jalankan langsung di Termux
 
-Di Termux utama, pasang tool dasar bila belum ada.
+Di Termux utama, pasang tool dasar dan cek Node.
 
 ```bash
 pkg update -y
-pkg install -y proot-distro git tmux
-```
-
-Masuk ke Ubuntu proot. Bila belum pernah memasang Ubuntu, jalankan `proot-distro install ubuntu` sekali sebelum perintah berikut.
-
-```bash
-proot-distro login ubuntu
-```
-
-Di Ubuntu, pastikan Node memenuhi versi minimum.
-
-```bash
+pkg install -y nodejs-lts git tmux
 node -v
 ```
 
-Showins Bot membutuhkan Node.js 20 atau lebih baru. Jika perintah di atas sudah menampilkan Node 20+, lanjutkan.
+Jika `node -v` belum menunjukkan versi 20 atau lebih baru, perbarui paket Node terlebih dahulu. Bot juga akan menghentikan startup dengan pesan yang jelas bila versi Node tidak memenuhi syarat.
 
 ## 2. Clone dan konfigurasi
 
@@ -44,14 +33,29 @@ Pastikan `bot.ownerNumbers` di `config.js` berisi nomor pemilik bot dalam format
 npm start
 ```
 
-Saat kode pairing tampil, buka WhatsApp Business/Messenger utama → **Perangkat tertaut** → **Tautkan perangkat** → **Tautkan dengan nomor telepon**, lalu masukkan kode terbaru. Jangan gunakan kode kustom atau kode dari percobaan lama.
+Saat socket sudah siap, kode pairing baru akan tampil satu kali. Buka WhatsApp Business/Messenger utama → **Perangkat tertaut** → **Tautkan perangkat** → **Tautkan dengan nomor telepon**, lalu masukkan kode terbaru. Jangan gunakan kode kustom atau kode dari percobaan lama.
+
+> Fingerprint `Ubuntu Chrome` pada konfigurasi adalah identitas protokol WhatsApp Web, bukan instruksi agar Android harus memakai Ubuntu proot. Biarkan pengaturan ini tetap seperti semula saat menjalankan bot langsung di Termux.
+
+## Jika muncul status 401 sebelum kode pairing
+
+Status `401` pada tahap ini berarti WhatsApp menolak sesi pairing sebelum perangkat terdaftar. Ini bukan bukti bahwa Termux biasa tidak didukung. Jangan menjalankan ulang berkali-kali dan **jangan** memakai `rm -rf storage`, karena perintah tersebut juga menghapus database pengguna/premium.
+
+Cadangkan lalu reset hanya session pairing dengan:
+
+```bash
+bash scripts/reset-pairing-session.sh
+npm start
+```
+
+Skrip tersebut memindahkan `storage/session/` ke folder backup bertimestamp dan mempertahankan `storage/users.json`. Pastikan Node 20+, nomor pairing format `628...`, koneksi tanpa VPN/proxy, serta hanya satu proses bot yang sedang berjalan. Jika 401 tetap muncul sebelum kode tampil, hentikan percobaan berulang dan simpan keluaran terminal; penolakan dapat berasal dari sisi server WhatsApp/protokol pairing.
 
 ## Memperbarui source tanpa menghapus session
 
-Jika bot sudah pernah terhubung, gunakan pembaruan berikut dari dalam Ubuntu proot. Perintah ini mengambil source terbaru dan memasang dependency ItsLiaaa Baileys tanpa mengubah `config.js` atau `storage/session/`.
+Jika bot sudah pernah terhubung, gunakan pembaruan berikut dari folder bot di Termux. Perintah ini mengambil source terbaru dan memasang dependency ItsLiaa Baileys tanpa mengubah `config.js` atau `storage/session/`.
 
 ```bash
-cd /root/showins-bot
+cd ~/showins-bot
 git pull --ff-only
 npm install --omit=dev --no-audit --no-fund
 npm run check
@@ -62,10 +66,10 @@ Jangan memindahkan atau menghapus `storage/session/` selama log masih menampilka
 
 ## 4. Menjalankan di latar belakang
 
-Keluar ke Termux utama dengan `exit`, lalu jalankan:
+Jalankan dari Termux utama:
 
 ```bash
-tmux new-session -d -s showins 'proot-distro login ubuntu -- bash -lc "cd /root/showins-bot && npm start"'
+tmux new-session -d -s showins 'cd ~/showins-bot && npm start'
 tmux capture-pane -pt showins -S -100
 ```
 
@@ -76,6 +80,10 @@ tmux capture-pane -pt showins -S -100
 | Masuk terminal bot | `tmux attach -t showins` |
 | Keluar tanpa mematikan bot | Tekan `Ctrl+b`, lalu `d` |
 | Menghentikan bot | `tmux kill-session -t showins` |
+
+## Alternatif: Ubuntu proot
+
+Jika tetap ingin memakai Ubuntu proot, pasang `proot-distro`, masuk ke Ubuntu, lalu ikuti perintah yang sama dari folder bot di dalam proot. Runtime Termux biasa dan Ubuntu proot sama-sama memerlukan Node 20+.
 
 ## Penting
 

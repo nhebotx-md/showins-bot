@@ -39,7 +39,9 @@ bash scripts/install-termux.sh
 npm start
 ```
 
-Installer membuat `config.js` jika belum ada, memasang dependency, dan menjalankan pemeriksaan awal. Sebelum `npm start`, edit `config.js` dan isi `connection.pairingNumber` dengan nomor akun WhatsApp utama Anda dalam format `628xxxxxxxxxx`. Saat socket berstatus `connecting`, terminal meminta pairing code satu kali dan menampilkannya dengan jelas.
+Installer membuat `config.js` jika belum ada, memasang dependency, dan menjalankan pemeriksaan awal. Bot dapat dijalankan langsung dari Termux biasa dengan Node 20+; Ubuntu proot hanya pilihan tambahan. Sebelum `npm start`, edit `config.js` dan isi `connection.pairingNumber` dengan nomor akun WhatsApp utama Anda dalam format `628xxxxxxxxxx`. Saat socket siap untuk autentikasi, terminal meminta pairing code satu kali dan menampilkannya dengan jelas.
+
+Apabila WhatsApp mengembalikan `401` sebelum kode pairing muncul, jangan hapus seluruh folder `storage`. Gunakan `bash scripts/reset-pairing-session.sh` untuk mencadangkan dan mereset **hanya** session pairing, sambil mempertahankan data pengguna/premium.
 
 Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memahami folder dan cara membuat fitur baru, buka [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 

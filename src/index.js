@@ -5,10 +5,21 @@ import { createLogger } from './core/logger.js'
 import { loadPlugins } from './core/plugin-loader.js'
 import { createCommandRouter } from './core/command-router.js'
 import { createUserStore } from './services/user-store.js'
+import { inspectRuntime } from './core/runtime.js'
 
 const logger = createLogger()
 
 async function main() {
+  const runtime = inspectRuntime()
+  if (!runtime.supported) {
+    logger.fatal(
+      { nodeVersion: runtime.nodeVersion },
+      'Node.js 20+ wajib digunakan. Perbarui Node Termux sebelum menjalankan bot.'
+    )
+    process.exitCode = 1
+    return
+  }
+
   const issues = validateConfig(config)
   if (issues.length > 0) {
     logger.fatal({ issues }, 'Konfigurasi belum siap. Periksa config.js.')
@@ -24,6 +35,10 @@ async function main() {
     engine: 'ItsLiaaa',
     plugins,
     userCount: userStore.list().length
+  })
+  logger.connection?.({
+    state: 'RUNTIME',
+    detail: `${runtime.runtime} · Node ${runtime.nodeVersion} · ${runtime.arch}`
   })
 
   const routeMessage = createCommandRouter({ config, plugins, logger, userStore })
