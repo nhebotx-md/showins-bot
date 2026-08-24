@@ -1,11 +1,27 @@
 import { sendInteractiveMenu } from '../services/rich-messages.js'
 
+function parseNativeFlowResponse(message = {}) {
+  const paramsJson = message.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson
+  if (!paramsJson) return ''
+
+  try {
+    const params = JSON.parse(paramsJson)
+    return typeof params.id === 'string' ? params.id : typeof params.selected_id === 'string' ? params.selected_id : ''
+  } catch {
+    return ''
+  }
+}
+
 function getText(message = {}) {
   return (
     message.conversation ||
     message.extendedTextMessage?.text ||
     message.imageMessage?.caption ||
     message.videoMessage?.caption ||
+    message.buttonsResponseMessage?.selectedButtonId ||
+    message.listResponseMessage?.singleSelectReply?.selectedRowId ||
+    message.templateButtonReplyMessage?.selectedId ||
+    parseNativeFlowResponse(message) ||
     ''
   ).trim()
 }

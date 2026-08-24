@@ -42,7 +42,7 @@ export default {
 }
 ```
 
-Plugin `menu` menggunakan `src/services/plugin-menu.js` untuk membuat ringkasan kategori pada `.menu` dan detail perintah pada `.menu <kategori>`. Gunakan ID kategori huruf kecil, misalnya `.menu tools` atau `.menu system`.
+Plugin `menu` menggunakan `src/services/plugin-menu.js` untuk membuat ringkasan kategori pada `.menu` dan detail perintah pada `.menu <kategori>`. Gunakan ID kategori huruf kecil, misalnya `.menu tools` atau `.menu system`. Respons tombol `quick_reply` native-flow juga diparsing oleh `src/core/command-router.js`, sehingga pilihan kategori dapat ditekan langsung tanpa mengetik ulang perintah.
 
 ## Membuat plugin baru
 

@@ -15,6 +15,7 @@ const required = [
   'docs/TERMUX.md',
   'docs/ARCHITECTURE.md',
   'test/plugin-categories.test.js',
+  'test/interactive-command-router.test.js',
   'test/rich-messages.test.js'
 ]
 
