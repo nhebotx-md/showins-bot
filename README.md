@@ -108,16 +108,16 @@ npm run inspect
 
 ## Logger terminal Termux
 
-Semua log terminal dikendalikan dari satu file: `src/core/logger.js`. Saat startup, desain **Command Ledger** menampilkan total plugin aktif dan count pada seluruh kategori—termasuk kategori yang masih bernilai `0`—dalam satu panel ringkas. Baris log per-plugin tidak lagi ditampilkan. Logger aktivitas hanya bekerja setelah router mengenali command berprefix, sehingga chat biasa, media biasa, atau percakapan yang bukan command **tidak dicetak** ke terminal.
+Semua log terminal dikendalikan dari satu file: `src/core/logger.js`. Saat startup, desain **Command Ledger** menggunakan frame runtime, badge inventory kategori, dan panel aktivitas terpisah agar informasi dapat dipindai cepat pada layar Termux. Panel menampilkan total plugin aktif dan count seluruh kategori—termasuk kategori yang masih bernilai `0`—tanpa lagi mencetak satu baris per plugin. Logger aktivitas hanya bekerja setelah router mengenali command berprefix, sehingga chat biasa, media biasa, atau percakapan yang bukan command **tidak dicetak** ke terminal.
 
 | Bagian terminal | Makna |
 |---|---|
-| `CATEGORY INVENTORY` | Count plugin pada Utama, Tools, Fun, Grup, Media, Owner, dan Sistem, serta total keseluruhannya. |
-| `TIME / FLOW / CONTEXT-DELIVERY / ACTION` | Tabel aktivitas command. `USER → BOT` berarti bot menerima command; `BOT → USER` berarti bot berhasil membalas. |
+| `FEATURE INVENTORY` | Badge count plugin pada Utama, Tools, Fun, Grup, Media, Owner, dan Sistem, serta total keseluruhannya. |
+| `LIVE ACTIVITY` | Panel terpisah dengan garis kolom konsisten: `TIME │ FLOW │ CONTEXT │ ACTION`. `USER → BOT` berarti bot menerima command; `BOT → USER` berarti bot berhasil membalas. |
 | `PRIVATE / GROUP / CHANNEL` | Pada baris masuk, menunjukkan asal command serta role pengirim. Pada baris keluar, logger menampilkan `DELIVERED → target`. |
 | `CONNECTION` | Status koneksi ringkas, termasuk connecting, pairing, connected, dan reconnecting. |
 
-Setiap command menghasilkan pasangan visual. Baris pertama menunjukkan **USER → BOT**, sumber dan role, lalu command. Baris kedua hanya muncul setelah pengiriman sukses sebagai **BOT → USER** dengan status `DELIVERED → target`; nomor target chat pribadi disamarkan agar tidak memenuhi terminal. Warna ANSI aktif otomatis pada terminal yang mendukungnya; atur `NO_COLOR=1` bila menginginkan keluaran tanpa warna.
+Setiap command menghasilkan pasangan visual. Baris pertama menunjukkan **USER → BOT**, sumber dan role, lalu command. Baris kedua hanya muncul setelah pengiriman sukses sebagai **BOT → USER** dengan status `DELIVERED → target`; nomor target chat pribadi disamarkan agar tidak memenuhi terminal. Warna ANSI dipakai secara terbatas untuk hierarchy: cyan bagi frame, magenta bagi inventory, hijau untuk command, biru untuk respons, dan kuning/merah untuk status perhatian atau kegagalan. Atur `NO_COLOR=1` bila menginginkan keluaran tanpa warna.
 
 ## Pengembangan dengan ItsLiaaa Baileys
 

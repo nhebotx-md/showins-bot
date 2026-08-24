@@ -33,9 +33,9 @@ test('logger aktivitas menampilkan event command dan respons dengan label sumber
 
   const plainLines = lines.map(line => line.replace(/\u001B\[[0-?]*[ -/]*[@-~]/g, ''))
   assert.equal(plainLines.length, 3)
-  assert.match(plainLines[0], /USER → BOT\s+GROUP · OWNER\s+\.users/)
-  assert.match(plainLines[1], /BOT  → USER\s+DELIVERED → GROUP\s+TEXT \/ 42 CHAR/)
-  assert.match(plainLines[2], /DELIVERED → 6281••••890\s+INTERACTIVE MENU/)
+  assert.match(plainLines[0], /USER → BOT\s+│\s+GROUP · OWNER\s+│\s+\.users/)
+  assert.match(plainLines[1], /BOT  → USER\s+│\s+DELIVERED → GROUP\s+│\s+TEXT \/ 42 CHAR/)
+  assert.match(plainLines[2], /DELIVERED → 6281••••890\s+│\s+INTERACTIVE MENU/)
 })
 
 test('panel Command Ledger menampilkan total plugin dan count setiap kategori', () => {
@@ -60,10 +60,10 @@ test('panel Command Ledger menampilkan total plugin dan count setiap kategori', 
   }
 
   const panel = lines.map(line => line.replace(/\u001B\[[0-?]*[ -/]*[@-~]/g, '')).join('\n')
-  assert.match(panel, /PLUGINS 4 ACTIVE/)
-  assert.match(panel, /USERS   4 REGISTERED/)
-  assert.match(panel, /UTAMA\s+1/)
-  assert.match(panel, /TOOLS\s+2/)
-  assert.match(panel, /OWNER\s+1/)
-  assert.match(panel, /TOTAL 4/)
+  assert.match(panel, /CAPACITY 04 PLUGIN/)
+  assert.match(panel, /USERS   04 REGISTERED/)
+  assert.match(panel, /\[UTAMA:01\]/)
+  assert.match(panel, /\[TOOLS:02\]/)
+  assert.match(panel, /\[OWNER:01\]/)
+  assert.match(panel, /TOTAL:04/)
 })

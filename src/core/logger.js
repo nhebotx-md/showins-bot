@@ -56,6 +56,17 @@ function boxBorder(position) {
   return position === 'top' ? '╭──────────────────────────────────────────────────────╮' : '╰──────────────────────────────────────────────────────╯'
 }
 
+function sectionLine(label) {
+  const content = ` ${label.toUpperCase()} `
+  return `├─${content}${'─'.repeat(Math.max(0, 52 - content.length))}┤`
+}
+
+function tableLine(columns, enabled, colors = []) {
+  return columns
+    .map((column, index) => color(column, colors[index] || 'white', enabled))
+    .join(color(' │ ', 'dim', enabled))
+}
+
 function maskTarget(value = '') {
   const digits = String(value).replace(/\D/g, '')
   if (digits.length < 8) return 'TARGET'
@@ -108,7 +119,11 @@ export function createLogger() {
       : context.type === 'interactive'
         ? 'INTERACTIVE MENU'
         : `TEXT / ${context.chars || 0} CHAR`
-    const line = `${color(getTime(), 'dim', colorsEnabled)}  ${color(pad(direction, 12), directionColor, colorsEnabled)}  ${color(pad(contextOrDelivery, 24), type === 'command' ? source.color : 'blue', colorsEnabled)} ${color(action, type === 'command' ? 'green' : 'blue', colorsEnabled)}`
+    const line = tableLine(
+      [pad(getTime(), 8), pad(direction, 12), pad(contextOrDelivery, 24), action],
+      colorsEnabled,
+      ['dim', directionColor, type === 'command' ? source.color : 'blue', type === 'command' ? 'green' : 'blue']
+    )
     writeLine(line)
   }
 
@@ -118,35 +133,38 @@ export function createLogger() {
       if (Object.hasOwn(categoryCounts, plugin.category)) categoryCounts[plugin.category] += 1
     }
 
-    const firstRow = CATEGORY_ORDER.slice(0, 4)
-      .map(category => `${pad(CATEGORY_LABELS[category], 7)} ${String(categoryCounts[category]).padStart(2)}`)
-      .join(' │ ')
-    const secondRow = CATEGORY_ORDER.slice(4)
-      .map(category => `${pad(CATEGORY_LABELS[category], 7)} ${String(categoryCounts[category]).padStart(2)}`)
-      .join(' │ ')
+    const badge = category => `[${CATEGORY_LABELS[category]}:${String(categoryCounts[category]).padStart(2, '0')}]`
+    const firstRow = CATEGORY_ORDER.slice(0, 4).map(badge).join(' ')
+    const secondRow = `${CATEGORY_ORDER.slice(4).map(badge).join(' ')}  TOTAL:${String(plugins.length).padStart(2, '0')}`
 
     writeLine(color(boxBorder('top'), 'cyan', colorsEnabled))
-    writeLine(color(boxLine(`${botName.toUpperCase()}  /  COMMAND LEDGER`), 'cyan', colorsEnabled))
-    writeLine(color(boxLine(`STATUS  BOOTING        ENGINE  ${engine.toUpperCase()}`), 'cyan', colorsEnabled))
-    writeLine(color(boxLine(`PLUGINS ${plugins.length} ACTIVE       USERS   ${userCount} REGISTERED`), 'cyan', colorsEnabled))
-    writeLine(color('├─ CATEGORY INVENTORY ──────────────────────────────────┤', 'cyan', colorsEnabled))
-    writeLine(color(boxLine(firstRow), 'cyan', colorsEnabled))
-    writeLine(color(boxLine(`${secondRow} │ TOTAL ${plugins.length}`), 'cyan', colorsEnabled))
-    writeLine(color('├─ ACTIVITY LEDGER ─────────────────────────────────────┤', 'cyan', colorsEnabled))
-    writeLine(color(boxLine('TIME      FLOW          CONTEXT / DELIVERY        ACTION'), 'cyan', colorsEnabled))
+    writeLine(color(boxLine(`◆ ${botName.toUpperCase()}  /  COMMAND LEDGER`), 'cyan', colorsEnabled))
+    writeLine(color(boxLine(`RUNTIME  ● BOOTING        ENGINE  ${engine.toUpperCase()}`), 'yellow', colorsEnabled))
+    writeLine(color(boxLine(`CAPACITY ${String(plugins.length).padStart(2, '0')} PLUGIN        USERS   ${String(userCount).padStart(2, '0')} REGISTERED`), 'green', colorsEnabled))
+    writeLine(color(sectionLine('feature inventory'), 'cyan', colorsEnabled))
+    writeLine(color(boxLine(firstRow), 'magenta', colorsEnabled))
+    writeLine(color(boxLine(secondRow), 'magenta', colorsEnabled))
     writeLine(color(boxBorder('bottom'), 'cyan', colorsEnabled))
+    writeLine(color('┌─ LIVE ACTIVITY ───────────────────────────────────────┐', 'blue', colorsEnabled))
+    writeLine(color(boxLine('TIME     │ FLOW       │ CONTEXT          │ ACTION'), 'blue', colorsEnabled))
+    writeLine(color('└──────────────────────────────────────────────────────┘', 'blue', colorsEnabled))
   }
 
   const connection = ({ state, detail = '' } = {}) => {
     const stateColor = state === 'CONNECTED' ? 'green' : state === 'FAILED' ? 'red' : state === 'RECONNECTING' ? 'yellow' : 'blue'
-    const line = `${color(getTime(), 'dim', colorsEnabled)}  ${color('SYS', stateColor, colorsEnabled)}  ${color(pad('CONNECTION', 8), 'white', colorsEnabled)} ${color(pad(state || 'UPDATE', 16), stateColor, colorsEnabled)} ${detail}`
+    const line = tableLine(
+      [pad(getTime(), 8), pad('SYSTEM', 12), pad(state || 'UPDATE', 24), detail],
+      colorsEnabled,
+      ['dim', 'white', stateColor, stateColor]
+    )
     writeLine(line)
   }
 
   const pairing = code => {
-    writeLine(color('╭─ PAIRING REQUIRED ────────────────────────────────────╮', 'yellow', colorsEnabled))
-    writeLine(color(boxLine(`CODE  ${code}`), 'yellow', colorsEnabled))
-    writeLine(color(boxLine('WhatsApp > Perangkat tertaut > Tautkan dengan nomor'), 'yellow', colorsEnabled))
+    writeLine(color('╭─ PAIRING / ACTION REQUIRED ───────────────────────────╮', 'yellow', colorsEnabled))
+    writeLine(color(boxLine('STATUS  WAITING FOR WHATSAPP INPUT'), 'yellow', colorsEnabled))
+    writeLine(color(boxLine(`CODE    ${code}`), 'white', colorsEnabled))
+    writeLine(color(boxLine('OPEN    WhatsApp > Perangkat tertaut > Nomor telepon'), 'yellow', colorsEnabled))
     writeLine(color('╰──────────────────────────────────────────────────────╯', 'yellow', colorsEnabled))
   }
 
