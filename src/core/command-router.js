@@ -1,5 +1,6 @@
 import { sendInteractiveMenu } from '../services/rich-messages.js'
 import { canAccess, getAccessLabel, getSenderNumber, getSenderNumbers, resolveUserRole } from './access-control.js'
+import { classifyChat } from './logger.js'
 import { getCategoryIdFromMenuCommand } from './plugin-categories.js'
 
 function parseNativeFlowResponse(message = {}) {
@@ -47,21 +48,40 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
       const parsed = getCommand(getText(message.message), config.bot.prefix)
       if (!parsed?.command) continue
 
-      const categoryId = getCategoryIdFromMenuCommand(parsed.command)
-      const plugin = commandMap.get(parsed.command) || (categoryId ? commandMap.get('menu') : null)
       const jid = message.key.remoteJid
-      if (!plugin) {
-        await socket.sendMessage(
-          jid,
-          { text: `Perintah tidak ditemukan. Coba ${config.bot.prefix}menu` },
-          { quoted: message }
-        )
-        continue
-      }
-
+      const source = classifyChat(jid)
       const senderNumber = getSenderNumber(message)
       const senderNumbers = getSenderNumbers(message)
       const role = resolveUserRole({ config, userStore, message, senderNumbers })
+      const commandLabel = `${config.bot.prefix}${parsed.command}`
+
+      // Hanya command yang melewati parser ini yang dicatat. Pesan chat biasa
+      // berhenti pada continue di atas dan tidak pernah menghasilkan log terminal.
+      logger.command?.({ source, role, from: senderNumber || 'LID', command: commandLabel })
+
+      const reply = async text => {
+        const result = await socket.sendMessage(jid, { text }, { quoted: message })
+        logger.reply?.({ source, role, command: commandLabel, type: 'text', chars: String(text).length })
+        return result
+      }
+      const sendMenu = async data => {
+        const result = await sendInteractiveMenu(socket, jid, { ...data, quoted: message })
+        logger.reply?.({
+          source,
+          role,
+          command: commandLabel,
+          type: 'interactive',
+          options: Array.isArray(data.options) ? data.options.length : 0
+        })
+        return result
+      }
+
+      const categoryId = getCategoryIdFromMenuCommand(parsed.command)
+      const plugin = commandMap.get(parsed.command) || (categoryId ? commandMap.get('menu') : null)
+      if (!plugin) {
+        await reply(`Perintah tidak ditemukan. Coba ${config.bot.prefix}menu`)
+        continue
+      }
 
       const context = {
         socket,
@@ -76,8 +96,8 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
         config,
         plugins,
         logger,
-        reply: text => socket.sendMessage(jid, { text }, { quoted: message }),
-        sendMenu: data => sendInteractiveMenu(socket, jid, { ...data, quoted: message })
+        reply,
+        sendMenu
       }
 
       if (!canAccess(role, plugin.access)) {

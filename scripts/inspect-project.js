@@ -22,6 +22,7 @@ const required = [
   'test/category-menu-router.test.js',
   'test/access-control.test.js',
   'test/access-router.test.js',
+  'test/activity-command-router.test.js',
   'test/role-plugins.test.js',
   'test/interactive-command-router.test.js',
   'test/rich-messages.test.js'

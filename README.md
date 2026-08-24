@@ -106,6 +106,19 @@ npm run inspect
 
 `npm run check` memeriksa sintaks seluruh berkas JavaScript di `src/`, `plugins/`, dan `test/`. Pengujian memastikan nomor pairing dibersihkan dengan benar, plugin dasar termuat, source tidak mengirim kode pairing kustom, adapter pusat tetap menunjuk **ItsLiaaa Baileys `0.3.18-final`**, serta menu interaktif selalu memiliki fallback teks.
 
+## Logger terminal Termux
+
+Semua log terminal dikendalikan dari satu file: `src/core/logger.js`. Logger aktivitas hanya bekerja setelah router mengenali command berprefix, sehingga chat biasa, media biasa, atau percakapan yang bukan command **tidak dicetak** ke terminal.
+
+| Label terminal | Makna |
+|---|---|
+| `CMD ◆ PRIVATE` | Command masuk dari chat pribadi. |
+| `CMD ◆ GROUP` | Command masuk dari grup. |
+| `CMD ◆ CHANNEL` | Command masuk dari channel/newsletter. |
+| `RSP` | Respons teks atau interactive menu yang berhasil dikirim bot untuk command tersebut. |
+
+Setiap baris aktivitas menampilkan sumber chat, role pengirim, command, serta metadata respons. Warna ANSI aktif otomatis pada terminal yang mendukungnya; atur `NO_COLOR=1` bila menginginkan keluaran tanpa warna.
+
 ## Pengembangan dengan ItsLiaaa Baileys
 
 Semua import koneksi WhatsApp dipusatkan pada `src/core/baileys.js`. Ketika akan memakai kemampuan library—misalnya media, grup, album, atau interactive/native-flow message—gunakan adapter layanan di `src/services/` atau tambahkan adapter baru. Jangan mengimpor library langsung dari plugin agar perubahan API dapat diaudit di satu tempat.

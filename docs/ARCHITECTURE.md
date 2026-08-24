@@ -6,6 +6,7 @@ Showins Bot sengaja dibuat kecil, tetapi setiap tanggung jawab dipisahkan agar m
 |---|---|---|
 | `config.js` | Nama bot, prefix, nomor pairing, dan mode | Saat menyiapkan bot untuk akun Anda |
 | `src/core/baileys.js` | Satu-satunya adapter import ItsLiaaa Baileys dan identitas versinya | Saat library atau API koneksi diperbarui |
+| `src/core/logger.js` | Seluruh format dan klasifikasi logger terminal | Saat mengubah tampilan atau event log Termux |
 | `src/core/access-control.js` | Deteksi nomor pengirim, peran, dan kebijakan akses command | Saat menambah level peran atau kebijakan akses |
 | `src/core/plugin-categories.js` | Registry kategori, urutan, label, dan deskripsi kategori plugin | Saat menambah jenis fitur baru |
 | `src/core/connection-manager.js` | Session, pairing, koneksi, dan reconnect | Hanya bila mengubah perilaku koneksi |
@@ -84,3 +85,9 @@ export default {
 Nomor yang tercantum dalam `bot.ownerNumbers` pada `config.js` selalu berperan sebagai owner dan tidak ditulis ulang ke database pengguna. Pengguna lain dapat menjalankan `.register` untuk mendaftarkan nomornya; owner dapat memakai `.adduser`, `.addpremium`, `.delpremium`, serta `.users`. Database `storage/users.json` dibuat lokal, memakai penulisan atomik, dan diabaikan oleh Git.
 
 Resolver identitas memprioritaskan `participantAlt` dan `remoteJidAlt` sebelum JID biasa agar nomor telepon tetap ditemukan ketika WhatsApp memakai identifier LID. Pesan yang ditandai `fromMe` diperlakukan sebagai owner karena berasal dari akun yang menautkan bot. Seluruh keputusan akses dilakukan oleh router sebelum plugin dijalankan.
+
+## Logger aktivitas command
+
+`src/core/logger.js` adalah satu-satunya modul yang membentuk keluaran terminal. Router memanggil `logger.command()` hanya setelah parser menemukan command berprefix, dan memanggil `logger.reply()` hanya setelah respons teks atau interaktif berhasil dikirim. Karena pesan biasa berhenti sebelum tahap parser command, pesan tersebut tidak menghasilkan log aktivitas.
+
+Sumber chat ditentukan dari JID tujuan: `@s.whatsapp.net`/`@lid` sebagai private, `@g.us` sebagai group, dan `@newsletter` sebagai channel. Logger memakai label `CMD` dan `RSP` serta warna ANSI untuk keterbacaan pada Termux; pengaturan lingkungan `NO_COLOR=1` menonaktifkan warna tanpa mengubah struktur data log.
