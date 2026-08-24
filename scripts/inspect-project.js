@@ -5,12 +5,16 @@ const required = [
   'config.example.js',
   'src/index.js',
   'src/core/baileys.js',
+  'src/core/plugin-categories.js',
   'src/core/connection-manager.js',
   'src/core/command-router.js',
   'src/core/plugin-loader.js',
   'src/services/rich-messages.js',
+  'src/services/plugin-menu.js',
   'plugins/menu.js',
   'docs/TERMUX.md',
+  'docs/ARCHITECTURE.md',
+  'test/plugin-categories.test.js',
   'test/rich-messages.test.js'
 ]
 

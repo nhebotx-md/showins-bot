@@ -48,8 +48,11 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | Perintah | Fungsi |
 |---|---|
 | `.menu` atau `.help` | Menu dan ringkasan fitur dasar |
+| `.menu <kategori>` | Menampilkan perintah dalam kategori tertentu, misalnya `.menu tools` |
 | `.ping` | Menguji respons bot |
 | `.status` atau `.info` | Melihat status runtime |
+
+Menu awal menampilkan hanya kategori yang memiliki fitur aktif. Kategori yang tersedia untuk pengembangan adalah **Utama**, **Tools**, **Grup**, **Media**, **Owner**, dan **Sistem**. Saat ini menu akan menampilkan Utama, Tools, dan Sistem; kategori lainnya muncul otomatis setelah plugin pertama pada kategori tersebut dibuat.
 
 ## Menambah fitur tanpa mengubah inti bot
 
@@ -58,6 +61,7 @@ Buat berkas baru di `plugins/`. Contoh paling kecil:
 ```js
 export default {
   name: 'halo',
+  category: 'tools',
   description: 'Contoh plugin.',
   commands: ['halo'],
   async execute({ reply }) {

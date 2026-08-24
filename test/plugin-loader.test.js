@@ -9,4 +9,5 @@ test('plugin dasar dapat dimuat dan memiliki command', async () => {
   assert.ok(plugins.length >= 3)
   assert.ok(plugins.some(plugin => plugin.commands.includes('menu')))
   assert.ok(plugins.some(plugin => plugin.commands.includes('ping')))
+  assert.ok(plugins.every(plugin => typeof plugin.category === 'string'))
 })
