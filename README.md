@@ -52,10 +52,29 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | `.catgroup` | Membuka menu kategori Grup |
 | `.catowner` | Membuka menu kategori Owner |
 | `.cat<kategori>` | Membuka menu kategori lain, misalnya `.cattools` atau `.catsystem` |
+| `.register` | Mendaftarkan nomor sendiri sebagai pengguna bot |
 | `.ping` | Menguji respons bot |
 | `.status` atau `.info` | Melihat status runtime |
+| `.premium` | Contoh fitur kategori Fun untuk pengguna premium |
+| `.adduser <nomor>` | Mendaftarkan pengguna secara manual — khusus owner |
+| `.addpremium <nomor>` | Memberikan premium — khusus owner |
+| `.delpremium <nomor>` | Mencabut premium — khusus owner |
+| `.users` | Melihat daftar pengguna — khusus owner |
 
 Menu utama memuat submenu untuk seluruh kategori: **Utama**, **Tools**, **Fun**, **Grup**, **Media**, **Owner**, dan **Sistem**. Setiap tombol menjalankan command `cat<kategori>` dan menampilkan menu kategori masing-masing. Kategori yang belum memiliki plugin akan tetap terbuka, tetapi menampilkan pemberitahuan bahwa belum ada fitur aktif.
+
+## Akses owner, premium, dan pengguna
+
+Bot membaca `bot.ownerNumbers` dari `config.js`; nomor tersebut langsung dianggap **owner** dan tidak perlu menjalankan registrasi. Data pengguna disimpan lokal di `storage/users.json`, yang otomatis dibuat saat bot dijalankan dan tidak pernah masuk Git.
+
+| Peran | Cara dikenali | Akses |
+|---|---|---|
+| **Owner** | Nomor ada di `bot.ownerNumbers` | Seluruh command, termasuk pengelolaan pengguna dan premium. |
+| **Premium** | Pengguna terdaftar dengan status premium | Command `registered`, `premium`, dan `public`. |
+| **Terdaftar** | Nomor ada di database pengguna | Command `registered` dan `public`. |
+| **Belum terdaftar** | Nomor tidak ditemukan di database | Menu kategori dan `.register`; command lain ditolak otomatis. |
+
+Setiap plugin wajib menentukan `access`: `public`, `registered`, `premium`, atau `owner`. Menu tetap dapat dilihat siapa pun, tetapi command yang terkunci diberi penanda peran yang dibutuhkan.
 
 ## Menambah fitur tanpa mengubah inti bot
 

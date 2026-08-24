@@ -36,6 +36,8 @@ nano config.js
 
 Installer akan memasang dependency, membuat `config.js` bila belum ada, dan menjalankan pemeriksaan dasar. Isi `pairingNumber` memakai nomor WhatsApp utama dengan format `628xxxxxxxxxx`, tanpa tanda tambah, spasi, atau nol di depan.
 
+Pastikan `bot.ownerNumbers` di `config.js` berisi nomor pemilik bot dalam format yang sama. Nomor ini otomatis memiliki akses owner dan tidak perlu mendaftar. Saat bot pertama berjalan, `storage/users.json` akan dibuat untuk menyimpan pengguna terdaftar dan premium; berkas tersebut bersifat lokal serta tidak diunggah ke GitHub.
+
 ## 3. Pasang dependency dan jalankan
 
 ```bash

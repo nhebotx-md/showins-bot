@@ -3,16 +3,18 @@ import { getMenuCategories, renderCategoryDetail, renderCategoryOverview } from 
 export default {
   name: 'menu',
   category: 'main',
+  access: 'public',
   description: 'Menampilkan menu dasar Showins Bot.',
   commands: ['menu', 'help'],
-  async execute({ args, config, plugins, reply, sendMenu }) {
+  async execute({ args, config, plugins, reply, role, sendMenu }) {
     const requestedCategory = args[0]?.toLowerCase()
     if (requestedCategory) {
       const detail = renderCategoryDetail({
         botName: config.bot.name,
         prefix: config.bot.prefix,
         plugins,
-        categoryId: requestedCategory
+        categoryId: requestedCategory,
+        role
       })
 
       if (!detail) {

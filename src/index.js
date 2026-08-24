@@ -4,6 +4,7 @@ import { validateConfig } from './core/config.js'
 import { createLogger } from './core/logger.js'
 import { loadPlugins } from './core/plugin-loader.js'
 import { createCommandRouter } from './core/command-router.js'
+import { createUserStore } from './services/user-store.js'
 
 const logger = createLogger()
 
@@ -16,7 +17,11 @@ async function main() {
   }
 
   const plugins = await loadPlugins({ logger })
-  const routeMessage = createCommandRouter({ config, plugins, logger })
+  const userStore = createUserStore({ filePath: config.data?.userStorePath || './storage/users.json' })
+  await userStore.load()
+  logger.info({ total: userStore.list().length }, 'Data pengguna dimuat')
+
+  const routeMessage = createCommandRouter({ config, plugins, logger, userStore })
 
   const manager = new ConnectionManager({
     config,

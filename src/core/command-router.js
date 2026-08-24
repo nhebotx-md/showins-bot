@@ -1,4 +1,5 @@
 import { sendInteractiveMenu } from '../services/rich-messages.js'
+import { canAccess, getAccessLabel, getSenderNumber, resolveUserRole } from './access-control.js'
 import { getCategoryIdFromMenuCommand } from './plugin-categories.js'
 
 function parseNativeFlowResponse(message = {}) {
@@ -33,7 +34,7 @@ function getCommand(text, prefix) {
   return { command: command.toLowerCase(), args }
 }
 
-export function createCommandRouter({ config, plugins, logger }) {
+export function createCommandRouter({ config, plugins, logger, userStore }) {
   const commandMap = new Map()
   for (const plugin of plugins) {
     for (const command of plugin.commands) commandMap.set(command.toLowerCase(), plugin)
@@ -58,17 +59,31 @@ export function createCommandRouter({ config, plugins, logger }) {
         continue
       }
 
+      const senderNumber = getSenderNumber(message)
+      const role = resolveUserRole({ config, userStore, senderNumber })
+
       const context = {
         socket,
         message,
         jid,
         args: categoryId ? [categoryId] : parsed.args,
         command: categoryId ? 'menu' : parsed.command,
+        senderNumber,
+        role,
+        userStore,
         config,
         plugins,
         logger,
         reply: text => socket.sendMessage(jid, { text }, { quoted: message }),
         sendMenu: data => sendInteractiveMenu(socket, jid, { ...data, quoted: message })
+      }
+
+      if (!canAccess(role, plugin.access)) {
+        await context.reply(
+          `Akses ditolak. Perintah ini hanya untuk pengguna ${getAccessLabel(plugin.access)}. ` +
+            `Peran Anda: ${role === 'guest' ? 'belum terdaftar' : role}.`
+        )
+        continue
       }
 
       try {

@@ -6,11 +6,13 @@ Showins Bot sengaja dibuat kecil, tetapi setiap tanggung jawab dipisahkan agar m
 |---|---|---|
 | `config.js` | Nama bot, prefix, nomor pairing, dan mode | Saat menyiapkan bot untuk akun Anda |
 | `src/core/baileys.js` | Satu-satunya adapter import ItsLiaaa Baileys dan identitas versinya | Saat library atau API koneksi diperbarui |
+| `src/core/access-control.js` | Deteksi nomor pengirim, peran, dan kebijakan akses command | Saat menambah level peran atau kebijakan akses |
 | `src/core/plugin-categories.js` | Registry kategori, urutan, label, dan deskripsi kategori plugin | Saat menambah jenis fitur baru |
 | `src/core/connection-manager.js` | Session, pairing, koneksi, dan reconnect | Hanya bila mengubah perilaku koneksi |
 | `src/core/command-router.js` | Membaca pesan dan mengarahkan perintah ke plugin | Bila ingin mengubah format perintah |
 | `plugins/` | Fitur bot yang berdiri sendiri | Lokasi utama untuk menambah fitur baru |
 | `src/services/` | Pembantu yang dipakai banyak plugin | Untuk formatter, API, atau pesan kaya |
+| `src/services/user-store.js` | Penyimpanan lokal pengguna terdaftar dan premium | Saat mengubah format data pengguna |
 | `storage/session/` | Kredensial WhatsApp | Jangan diunggah atau dihapus kecuali recovery session |
 | `docs/` | Panduan manusia | Saat ada perubahan cara penggunaan |
 
@@ -61,3 +63,22 @@ export default {
 ```
 
 Setelah bot direstart, perintah `.halo` langsung tersedia. Tidak perlu mendaftarkan plugin ke file lain.
+
+## Kontrak akses plugin
+
+Selain `category`, setiap plugin **wajib** memiliki `access` dengan satu dari empat nilai: `public`, `registered`, `premium`, atau `owner`. `src/core/command-router.js` menentukan nomor pengirim dari chat pribadi atau peserta grup, lalu menguji peran sebelum memanggil `execute` plugin.
+
+```js
+export default {
+  name: 'fitur-premium',
+  category: 'fun',
+  access: 'premium',
+  description: 'Contoh fitur khusus premium.',
+  commands: ['fiturpremium'],
+  async execute({ reply }) {
+    await reply('Fitur premium berjalan.')
+  }
+}
+```
+
+Nomor yang tercantum dalam `bot.ownerNumbers` pada `config.js` selalu berperan sebagai owner dan tidak ditulis ulang ke database pengguna. Pengguna lain dapat menjalankan `.register` untuk mendaftarkan nomornya; owner dapat memakai `.adduser`, `.addpremium`, `.delpremium`, serta `.users`. Database `storage/users.json` dibuat lokal, memakai penulisan atomik, dan diabaikan oleh Git.

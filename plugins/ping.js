@@ -1,6 +1,7 @@
 export default {
   name: 'ping',
   category: 'tools',
+  access: 'registered',
   description: 'Memeriksa respons bot.',
   commands: ['ping'],
   async execute({ reply }) {

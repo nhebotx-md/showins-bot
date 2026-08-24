@@ -24,6 +24,7 @@ test('router menjalankan perintah ketika respons quick reply native-flow membawa
       {
         name: 'menu',
         category: 'main',
+        access: 'public',
         commands: ['menu'],
         async execute({ args, reply }) {
           await reply(`Kategori: ${args[0]}`)

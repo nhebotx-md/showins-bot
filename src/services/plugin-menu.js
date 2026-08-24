@@ -1,3 +1,4 @@
+import { canAccess, getAccessLabel } from '../core/access-control.js'
 import { getAllPluginCategories, getCategoryMenuCommand, getPluginCategory } from '../core/plugin-categories.js'
 
 function formatCommands(commands, prefix) {
@@ -35,7 +36,7 @@ export function renderCategoryOverview({ botName, prefix, plugins }) {
   return lines.join('\n')
 }
 
-export function renderCategoryDetail({ botName, prefix, plugins, categoryId }) {
+export function renderCategoryDetail({ botName, prefix, plugins, categoryId, role = 'guest' }) {
   const category = getPluginCategory(categoryId)
   if (!category) return null
 
@@ -46,7 +47,11 @@ export function renderCategoryDetail({ botName, prefix, plugins, categoryId }) {
   } else {
     for (const plugin of categoryPlugins) {
       lines.push(`*${formatCommands(plugin.commands, prefix)}*`)
-      lines.push(`  ${plugin.description}`)
+      if (canAccess(role, plugin.access)) {
+        lines.push(`  ${plugin.description}`)
+      } else {
+        lines.push(`  ${plugin.description} [Terkunci: ${getAccessLabel(plugin.access)}]`)
+      }
     }
   }
 

@@ -10,9 +10,9 @@ import {
 import { getMenuCategories, renderCategoryDetail, renderCategoryOverview } from '../src/services/plugin-menu.js'
 
 const plugins = [
-  { name: 'status', category: 'system', description: 'Status bot.', commands: ['status'] },
-  { name: 'menu', category: 'main', description: 'Menu bot.', commands: ['menu', 'help'] },
-  { name: 'ping', category: 'tools', description: 'Uji respons.', commands: ['ping'] }
+  { name: 'status', category: 'system', access: 'registered', description: 'Status bot.', commands: ['status'] },
+  { name: 'menu', category: 'main', access: 'public', description: 'Menu bot.', commands: ['menu', 'help'] },
+  { name: 'ping', category: 'tools', access: 'premium', description: 'Uji respons.', commands: ['ping'] }
 ]
 
 test('registry hanya menerima kategori plugin Showins yang dikenal', () => {
@@ -36,13 +36,16 @@ test('kategori aktif diurutkan sesuai prioritas registry', () => {
 
 test('menu kategori membuat ringkasan dan detail perintah dengan prefix yang benar', () => {
   const overview = renderCategoryOverview({ botName: 'Showins Bot', prefix: '.', plugins })
-  const detail = renderCategoryDetail({ botName: 'Showins Bot', prefix: '.', plugins, categoryId: 'tools' })
+  const guestDetail = renderCategoryDetail({ botName: 'Showins Bot', prefix: '.', plugins, categoryId: 'tools' })
+  const premiumDetail = renderCategoryDetail({ botName: 'Showins Bot', prefix: '.', plugins, categoryId: 'tools', role: 'premium' })
 
   assert.match(overview, /\*Utama\* — \.catmain/)
   assert.match(overview, /\*Fun\* — \.catfun/)
   assert.match(overview, /\*Sistem\* — \.catsystem/)
-  assert.equal(detail.category.label, 'Tools')
-  assert.match(detail.text, /\*\.ping\*/)
+  assert.equal(guestDetail.category.label, 'Tools')
+  assert.match(guestDetail.text, /\*\.ping\*/)
+  assert.match(guestDetail.text, /Terkunci: premium/)
+  assert.doesNotMatch(premiumDetail.text, /Terkunci/)
   assert.match(
     renderCategoryDetail({ botName: 'Showins Bot', prefix: '.', plugins, categoryId: 'media' }).text,
     /Belum ada fitur aktif/

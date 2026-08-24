@@ -3,6 +3,7 @@ import { BAILEYS_INFO } from '../src/core/baileys.js'
 export default {
   name: 'status',
   category: 'system',
+  access: 'registered',
   description: 'Menampilkan status dasar runtime.',
   commands: ['status', 'info'],
   async execute({ config, reply }) {

@@ -9,9 +9,18 @@ test('nomor pairing dibersihkan ke format negara', () => {
 
 test('konfigurasi menolak nomor pairing yang belum valid', () => {
   const issues = validateConfig({
-    bot: { name: 'Showins', prefix: '.' },
+    bot: { name: 'Showins', prefix: '.', ownerNumbers: ['6281234567890'] },
     connection: { usePairingCode: true, pairingNumber: '62', authDir: './storage/session' }
   })
 
   assert.equal(issues.length, 1)
+})
+
+test('konfigurasi mengharuskan minimal satu owner yang dapat dideteksi otomatis', () => {
+  const issues = validateConfig({
+    bot: { name: 'Showins', prefix: '.', ownerNumbers: [] },
+    connection: { usePairingCode: false, pairingNumber: '', authDir: './storage/session' }
+  })
+
+  assert.match(issues.join('\n'), /bot\.ownerNumbers/)
 })

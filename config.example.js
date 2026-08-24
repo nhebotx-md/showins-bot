@@ -10,6 +10,11 @@ export default {
     mode: 'public'
   },
 
+  data: {
+    // Database lokal pengguna terdaftar dan premium. Berkas ini tidak masuk Git.
+    userStorePath: './storage/users.json'
+  },
+
   connection: {
     // Nomor WhatsApp utama: hanya angka, format negara Indonesia 628xxxx.
     pairingNumber: '6281234567890',

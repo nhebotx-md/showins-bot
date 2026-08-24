@@ -1,6 +1,7 @@
 node_modules/
 storage/session/
 storage/logs/
+storage/users.json
 /config.js
 .env
 .DS_Store
