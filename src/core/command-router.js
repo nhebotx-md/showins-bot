@@ -1,4 +1,5 @@
 import { sendInteractiveMenu } from '../services/rich-messages.js'
+import { getCategoryIdFromMenuCommand } from './plugin-categories.js'
 
 function parseNativeFlowResponse(message = {}) {
   const paramsJson = message.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson
@@ -45,7 +46,8 @@ export function createCommandRouter({ config, plugins, logger }) {
       const parsed = getCommand(getText(message.message), config.bot.prefix)
       if (!parsed?.command) continue
 
-      const plugin = commandMap.get(parsed.command)
+      const categoryId = getCategoryIdFromMenuCommand(parsed.command)
+      const plugin = commandMap.get(parsed.command) || (categoryId ? commandMap.get('menu') : null)
       const jid = message.key.remoteJid
       if (!plugin) {
         await socket.sendMessage(
@@ -60,8 +62,8 @@ export function createCommandRouter({ config, plugins, logger }) {
         socket,
         message,
         jid,
-        args: parsed.args,
-        command: parsed.command,
+        args: categoryId ? [categoryId] : parsed.args,
+        command: categoryId ? 'menu' : parsed.command,
         config,
         plugins,
         logger,

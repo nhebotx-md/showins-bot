@@ -47,12 +47,15 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 
 | Perintah | Fungsi |
 |---|---|
-| `.menu` atau `.help` | Menu dan ringkasan fitur dasar |
-| `.menu <kategori>` | Menampilkan perintah dalam kategori tertentu, misalnya `.menu tools` |
+| `.menu` atau `.help` | Menu utama berisi seluruh submenu kategori |
+| `.catfun` | Membuka menu kategori Fun |
+| `.catgroup` | Membuka menu kategori Grup |
+| `.catowner` | Membuka menu kategori Owner |
+| `.cat<kategori>` | Membuka menu kategori lain, misalnya `.cattools` atau `.catsystem` |
 | `.ping` | Menguji respons bot |
 | `.status` atau `.info` | Melihat status runtime |
 
-Menu awal menampilkan hanya kategori yang memiliki fitur aktif. Kategori yang tersedia untuk pengembangan adalah **Utama**, **Tools**, **Grup**, **Media**, **Owner**, dan **Sistem**. Saat ini menu akan menampilkan Utama, Tools, dan Sistem; kategori lainnya muncul otomatis setelah plugin pertama pada kategori tersebut dibuat.
+Menu utama memuat submenu untuk seluruh kategori: **Utama**, **Tools**, **Fun**, **Grup**, **Media**, **Owner**, dan **Sistem**. Setiap tombol menjalankan command `cat<kategori>` dan menampilkan menu kategori masing-masing. Kategori yang belum memiliki plugin akan tetap terbuka, tetapi menampilkan pemberitahuan bahwa belum ada fitur aktif.
 
 ## Menambah fitur tanpa mengubah inti bot
 

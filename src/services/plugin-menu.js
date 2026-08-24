@@ -1,4 +1,4 @@
-import { getCategoriesForPlugins, getPluginCategory } from '../core/plugin-categories.js'
+import { getAllPluginCategories, getCategoryMenuCommand, getPluginCategory } from '../core/plugin-categories.js'
 
 function formatCommands(commands, prefix) {
   return commands.map(command => `${prefix}${command}`).join(', ')
@@ -11,7 +11,7 @@ function pluginsForCategory(plugins, categoryId) {
 }
 
 export function getMenuCategories(plugins) {
-  return getCategoriesForPlugins(plugins).map(category => ({
+  return getAllPluginCategories().map(category => ({
     ...category,
     plugins: pluginsForCategory(plugins, category.id)
   }))
@@ -23,15 +23,15 @@ export function renderCategoryOverview({ botName, prefix, plugins }) {
     `*${botName}*`,
     'Pusat perintah berdasarkan kategori.',
     '',
-    '*Kategori aktif*'
+    '*Pilih menu kategori*'
   ]
 
   for (const category of categories) {
-    lines.push(`• *${category.label}* — ${category.plugins.length} fitur`)
-    lines.push(`  ${category.description}`)
+    lines.push(`• *${category.label}* — ${prefix}${getCategoryMenuCommand(category.id)}`)
+    lines.push(`  ${category.description} (${category.plugins.length} fitur)`)
   }
 
-  lines.push('', `Ketik *${prefix}menu <kategori>* untuk melihat perintah.`)
+  lines.push('', `Ketik atau tekan *${prefix}cat<kategori>* untuk membuka submenu.`)
   return lines.join('\n')
 }
 
@@ -40,12 +40,14 @@ export function renderCategoryDetail({ botName, prefix, plugins, categoryId }) {
   if (!category) return null
 
   const categoryPlugins = pluginsForCategory(plugins, category.id)
-  if (categoryPlugins.length === 0) return null
-
   const lines = [`*${botName} — ${category.label}*`, category.description, '']
-  for (const plugin of categoryPlugins) {
-    lines.push(`*${formatCommands(plugin.commands, prefix)}*`)
-    lines.push(`  ${plugin.description}`)
+  if (categoryPlugins.length === 0) {
+    lines.push('Belum ada fitur aktif pada kategori ini.')
+  } else {
+    for (const plugin of categoryPlugins) {
+      lines.push(`*${formatCommands(plugin.commands, prefix)}*`)
+      lines.push(`  ${plugin.description}`)
+    }
   }
 
   lines.push('', `Kembali ke semua kategori: *${prefix}menu*`)

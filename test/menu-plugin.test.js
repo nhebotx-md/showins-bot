@@ -9,7 +9,7 @@ const plugins = [
   { name: 'status', category: 'system', description: 'Menampilkan status.', commands: ['status', 'info'] }
 ]
 
-test('plugin menu mengirim kategori aktif sebagai pilihan interactive menu', async () => {
+test('plugin menu mengirim semua submenu kategori sebagai pilihan interactive menu', async () => {
   const sentMenus = []
   await menuPlugin.execute({
     args: [],
@@ -21,9 +21,13 @@ test('plugin menu mengirim kategori aktif sebagai pilihan interactive menu', asy
 
   assert.equal(sentMenus.length, 1)
   assert.deepEqual(sentMenus[0].options, [
-    { label: 'Utama', id: '.menu main' },
-    { label: 'Tools', id: '.menu tools' },
-    { label: 'Sistem', id: '.menu system' }
+    { label: 'Utama', id: '.catmain' },
+    { label: 'Tools', id: '.cattools' },
+    { label: 'Fun', id: '.catfun' },
+    { label: 'Grup', id: '.catgroup' },
+    { label: 'Media', id: '.catmedia' },
+    { label: 'Owner', id: '.catowner' },
+    { label: 'Sistem', id: '.catsystem' }
   ])
 })
 

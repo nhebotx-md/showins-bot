@@ -1,6 +1,12 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { getCategoriesForPlugins, getPluginCategory, isPluginCategory } from '../src/core/plugin-categories.js'
+import {
+  getCategoriesForPlugins,
+  getCategoryIdFromMenuCommand,
+  getCategoryMenuCommand,
+  getPluginCategory,
+  isPluginCategory
+} from '../src/core/plugin-categories.js'
 import { getMenuCategories, renderCategoryDetail, renderCategoryOverview } from '../src/services/plugin-menu.js'
 
 const plugins = [
@@ -14,6 +20,10 @@ test('registry hanya menerima kategori plugin Showins yang dikenal', () => {
   assert.equal(isPluginCategory('system'), true)
   assert.equal(isPluginCategory('tidak-ada'), false)
   assert.equal(getPluginCategory('media').label, 'Media')
+  assert.equal(getCategoryMenuCommand('fun'), 'catfun')
+  assert.equal(getCategoryIdFromMenuCommand('catgroup'), 'group')
+  assert.equal(getCategoryIdFromMenuCommand('catowner'), 'owner')
+  assert.equal(getCategoryIdFromMenuCommand('catunknown'), null)
 })
 
 test('kategori aktif diurutkan sesuai prioritas registry', () => {
@@ -28,9 +38,13 @@ test('menu kategori membuat ringkasan dan detail perintah dengan prefix yang ben
   const overview = renderCategoryOverview({ botName: 'Showins Bot', prefix: '.', plugins })
   const detail = renderCategoryDetail({ botName: 'Showins Bot', prefix: '.', plugins, categoryId: 'tools' })
 
-  assert.match(overview, /\*Utama\* — 1 fitur/)
-  assert.match(overview, /\*Sistem\* — 1 fitur/)
+  assert.match(overview, /\*Utama\* — \.catmain/)
+  assert.match(overview, /\*Fun\* — \.catfun/)
+  assert.match(overview, /\*Sistem\* — \.catsystem/)
   assert.equal(detail.category.label, 'Tools')
   assert.match(detail.text, /\*\.ping\*/)
-  assert.equal(renderCategoryDetail({ botName: 'Showins Bot', prefix: '.', plugins, categoryId: 'media' }), null)
+  assert.match(
+    renderCategoryDetail({ botName: 'Showins Bot', prefix: '.', plugins, categoryId: 'media' }).text,
+    /Belum ada fitur aktif/
+  )
 })

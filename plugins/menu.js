@@ -16,7 +16,7 @@ export default {
       })
 
       if (!detail) {
-        await reply(`Kategori tidak ditemukan. Gunakan ${config.bot.prefix}menu untuk melihat kategori aktif.`)
+        await reply(`Kategori tidak ditemukan. Gunakan ${config.bot.prefix}menu untuk melihat semua menu kategori.`)
         return
       }
 
@@ -27,7 +27,7 @@ export default {
     const categories = getMenuCategories(plugins)
     const options = categories.map(category => ({
       label: category.label,
-      id: `${config.bot.prefix}menu ${category.id}`
+      id: `${config.bot.prefix}cat${category.id}`
     }))
 
     await sendMenu({
