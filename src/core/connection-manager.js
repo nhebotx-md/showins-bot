@@ -19,11 +19,12 @@ function getStatusCode(lastDisconnect) {
 }
 
 export class ConnectionManager {
-  constructor({ config, logger, onMessages, onPairingCode }) {
+  constructor({ config, logger, onMessages, onPairingCode, onGroupParticipants }) {
     this.config = config
     this.logger = logger
     this.onMessages = onMessages
     this.onPairingCode = onPairingCode
+    this.onGroupParticipants = onGroupParticipants
     this.socket = null
     this.stopped = false
     this.reconnectAttempts = 0
@@ -66,6 +67,7 @@ export class ConnectionManager {
     this.socket = socket
     socket.ev.on('creds.update', saveCreds)
     socket.ev.on('messages.upsert', update => this.onMessages({ socket, messages: update.messages }))
+    socket.ev.on('group-participants.update', update => this.onGroupParticipants?.({ socket, update }))
     socket.ev.on('connection.update', update => this.handleConnectionUpdate(update, state, socket))
 
   }

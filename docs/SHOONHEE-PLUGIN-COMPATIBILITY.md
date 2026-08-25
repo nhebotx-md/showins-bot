@@ -8,7 +8,7 @@ Dokumen ini mencatat hasil checker statis terhadap commit `e95f25a` dari reposit
 |---|---|---|---|
 | `cek/` dan bagian lokal `fun/` | `plugins/fun/` | Siap diadaptasi | Respons teks deterministik/acak dapat memakai quote bawaan router. Konten seksual, diagnosis mental, atau klaim hidup tidak diikutkan. |
 | `game/` | `plugins/fun/` dengan mesin sesi terpisah | Perlu fondasi | Banyak wrapper memakai mesin quiz bersama, state per chat, jawaban quote, hint, dan timeout. |
-| `group/` | `plugins/group/` | Perlu kontrol konteks | Hanya command admin grup yang aman dan non-destruktif; harus memverifikasi grup/admin/bot-admin di router. |
+| `group/` | `plugins/group/` | Diadaptasi selektif | Command moderasi dan konfigurasi grup yang aman memakai guard konteks, penyimpanan lokal, serta event peserta grup. |
 | `tools/`, `utility/`, `info/` | `plugins/tools/` | Selektif | Utilitas lokal dapat diadaptasi; operasi file, proses sistem, dan layanan jaringan harus ditinjau satu per satu. |
 | `media/`, `sticker/`, `download/` | `plugins/media/` | Memerlukan adapter | Memerlukan validasi media, batas ukuran, dan/atau layanan eksternal yang terkonfigurasi. |
 | `testbutton/` dan pola reply | `plugins/testreply/` | Selektif | Hanya quote asli, rich preview yang jujur, reaksi, poll, lokasi demo, dan interaktif dengan fallback teks. |
@@ -17,14 +17,16 @@ Dokumen ini mencatat hasil checker statis terhadap commit `e95f25a` dari reposit
 
 ## Batch aman yang sudah diadaptasi
 
-Sebanyak **43 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari kategori `game/`, 10 command pertanyaan santai dari `fun/`, 10 command indikator hiburan dari `cek/`, 5 command grup dari `group/`, dan `readmore` dari `tools/`. Seluruhnya menggunakan `adaptedFrom`, sehingga loader memeriksa kategori, access, dan requirements sumber sebelum plugin boleh aktif.
+Sebanyak **61 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari kategori `game/`, 10 command pertanyaan santai dari `fun/`, 10 command indikator hiburan dari `cek/`, 23 command grup dari `group/`, dan `readmore` dari `tools/`. Seluruhnya menggunakan `adaptedFrom`, sehingga loader memeriksa kategori, access, dan requirements sumber sebelum plugin boleh aktif.
 
 | Kelompok | Command utama | Perilaku respons |
 |---|---|---|
 | Quiz teks | `.asahotak`, `.caklontong`, `.kataacak`, `.riddle`, `.tebakkimia`, dan 12 quiz lain | Bot mengirim soal yang mengutip command; jawaban hanya diterima bila membalas quote pesan quiz, dengan hint, menyerah, jawaban benar, dan timeout. |
 | Pertanyaan santai | `.akankah`, `.apakah`, `.bagaimana`, `.berapa`, `.bisakah`, `.coba`, `.dimana`, `.haruskah`, `.kapan`, `.mengapa` | Reply berisi respons ringan yang jelas ditandai bukan kepastian atau dasar keputusan penting. |
 | Cek hiburan | `.cekbaik`, `.cekcreative`, `.cekgamer`, `.cekgacha`, `.cekkpopers`, `.ceklapar`, `.cekotaku`, `.cekpintar`, `.ceksabar`, `.cekwibu` | Persentase acak lokal, selalu ditandai sebagai hiburan dan bukan asesmen pribadi. |
-| Fitur grup | `.open`, `.close`, `.setnamegc`, `.setdeskgc`, `.poll` | Router memverifikasi konteks grup untuk semua command; command administrasi juga memverifikasi admin pengirim dan bot-admin. Poll memakai payload asli dengan fallback teks. |
+| Fitur grup | `.open`, `.close`, `.setnamegc`, `.setdeskgc`, `.poll`, `.kick`, `.promote`, `.demote`, `.add`, `.delete`, `.linkgc`, `.revoke` | Router memverifikasi konteks grup; moderasi memerlukan admin pengirim dan bot-admin. Add dibatasi maksimal 10 nomor; delete wajib mengutip pesan target. |
+| Profil grup | `.rulesgrup`, `.setrulesgrup`, `.resetrulesgrup`, `.welcome`, `.setwelcome`, `.resetwelcome`, `.goodbye`, `.setgoodbye`, `.resetgoodbye` | Konfigurasi disimpan lokal pada `storage/groups.json`. Welcome/goodbye hanya aktif bila admin menyimpan template dan memakai placeholder yang diizinkan. |
+| Status pengguna | `.afk`, `.away`, `.brb` | Status runtime per pengguna; bot memberi tahu saat pengguna disebut dan menghapus status ketika pengguna mengirim pesan lagi. |
 | Utilitas pesan | `.readmore` | Membuat spoiler/read-more menggunakan separator WhatsApp; respons tetap mengutip command pengguna. |
 
 ## Kategori yang tidak akan diadaptasi otomatis

@@ -46,6 +46,8 @@ export function createCommandRouter({ config, plugins, logger, userStore, servic
     for (const message of messages) {
       if (!message.message || message.key.remoteJid === 'status@broadcast') continue
 
+      await services.afk?.handleMessage?.({ socket, message, prefix: config.bot.prefix })
+
       const parsed = getCommand(getText(message.message), config.bot.prefix)
       if (!parsed?.command) {
         await services.quiz?.handleResponse?.({ socket, message })

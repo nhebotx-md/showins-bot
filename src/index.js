@@ -5,6 +5,9 @@ import { createLogger } from './core/logger.js'
 import { loadPlugins } from './core/plugin-loader.js'
 import { createCommandRouter } from './core/command-router.js'
 import { createUserStore } from './services/user-store.js'
+import { createGroupProfileStore } from './services/group-profile-store.js'
+import { createGroupGreetingService } from './services/group-greetings.js'
+import { createAfkService } from './services/afk-service.js'
 import { createQuizSessionService } from './services/quiz-sessions.js'
 import { inspectRuntime } from './core/runtime.js'
 
@@ -31,6 +34,8 @@ async function main() {
   const plugins = await loadPlugins({ logger })
   const userStore = createUserStore({ filePath: config.data?.userStorePath || './storage/users.json' })
   await userStore.load()
+  const groupProfiles = createGroupProfileStore({ filePath: config.data?.groupStorePath || './storage/groups.json' })
+  await groupProfiles.load()
   logger.startup({
     botName: config.bot.name,
     engine: 'ItsLiaaa',
@@ -43,8 +48,11 @@ async function main() {
   })
 
   const services = {
-    quiz: createQuizSessionService({ config, logger, userStore })
+    quiz: createQuizSessionService({ config, logger, userStore }),
+    groupProfiles,
+    afk: createAfkService()
   }
+  const groupGreetings = createGroupGreetingService({ groupProfiles, config, logger })
   const routeMessage = createCommandRouter({ config, plugins, logger, userStore, services })
 
   const manager = new ConnectionManager({
@@ -53,7 +61,8 @@ async function main() {
     onMessages: routeMessage,
     onPairingCode: code => {
       logger.pairing(code)
-    }
+    },
+    onGroupParticipants: groupGreetings.handle
   })
 
   const stop = async signal => {

@@ -42,6 +42,7 @@ const required = [
   'docs/ARCHITECTURE.md',
   'docs/REPLY-LAB.md',
   'docs/MENU-THEMES.md',
+  'docs/GROUP-AUTOMATION.md',
   'docs/ITSUKICHAN-MESSAGE-RESEARCH.md',
   'docs/SHOONHEE-PLUGIN-COMPATIBILITY.md',
   'test/plugin-categories.test.js',
@@ -59,6 +60,9 @@ const required = [
   ,'test/quiz-sessions.test.js'
   ,'test/group-settings.test.js'
   ,'test/menu-theme.test.js'
+  ,'test/group-members.test.js'
+  ,'test/group-profile.test.js'
+  ,'test/afk-service.test.js'
 ]
 
 const missing = []
