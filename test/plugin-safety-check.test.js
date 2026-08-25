@@ -7,8 +7,8 @@ import { runPluginSafetyCheck } from '../scripts/check-plugin-safety.js'
 
 test('checker keamanan menerima seluruh plugin Showins yang tervalidasi', async () => {
   const result = await runPluginSafetyCheck({ pluginDir: path.resolve('plugins') })
-  assert.equal(result.total, 80)
-  assert.equal(result.adapted, 62)
+  assert.equal(result.total, 81)
+  assert.equal(result.adapted, 63)
 })
 
 test('checker keamanan menolak pola berisiko sebelum plugin dapat digunakan', async () => {
