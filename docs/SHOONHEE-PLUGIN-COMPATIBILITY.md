@@ -39,6 +39,20 @@ Sebanyak **72 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari k
 
 Checker menemukan plugin dengan pola eksekusi proses, evaluasi dinamis, penghapusan file, pengiriman massal, konten dewasa, serta model pesan yang berpotensi menipu. Kategori `nsfw/`, `pushkontak/`, dan `jpm/` dikecualikan. Command `eval`, `exec`, pengelolaan panel/VPS jarak jauh, broadcast, spam, pemalsuan kontak/order/pembayaran, dan penghapusan file juga tidak akan dipindahkan ke Showins Bot.
 
+### Keputusan audit untuk kandidat yang ditinjau
+
+Tabel berikut membedakan **fitur yang belum tersedia** dari fitur yang **sengaja tidak diadaptasi dalam bentuk source asalnya**. Pengecualian ini menjaga runtime Termux tetap mandiri, menghindari storage data pribadi yang tidak diperlukan, serta mencegah tindakan terhadap pihak ketiga tanpa kontrol yang jelas. Contoh command di bawah berasal dari audit source ShooNhee-md pada commit yang sama.[1]
+
+| Kandidat source | Status | Alasan dan jalur yang diperlukan bila ingin diaktifkan |
+|---|---|---|
+| `.puisi`, `.senja` | Memerlukan integrasi eksplisit | Mengambil konten dari API pihak ketiga dan membutuhkan API key. Aktivasi harus memakai layanan yang disepakati, secret terkelola, batas penggunaan, fallback, dan test kegagalan jaringan. |
+| `.cekkhodam` | Tidak dipindahkan sebagai source asal | Membuat audio TTS serta menulis dan menghapus berkas sementara. Selain itu, hasilnya harus diperlakukan sebagai permainan fiksi, bukan klaim spiritual atau penilaian personal. |
+| `.confess` | Dikecualikan | Meneruskan pesan anonim ke nomor lain dan menyimpan data pengirim-penerima. Model relay ini dapat digunakan untuk mengganggu pihak ketiga dan tidak cocok untuk aktivasi default. |
+| `.sulap` | Digantikan oleh moderasi yang eksplisit | Source menjalankan penghapusan anggota grup. Showins Bot hanya menyediakan aksi moderasi yang jelas seperti `.kick`, dengan guard admin, bot-admin, dan quote target. |
+| `.tembak`, `.terima`, `.tolak`, `.cekpacar`, `.jodoh`, `.soulmatch`, `.putus` | Dikecualikan | Fitur ini menyimpan atau memaparkan status relasi, target pendekatan, dan pada beberapa alur memakai data registrasi seperti gender. Tidak dibuatkan storage hubungan pengguna. |
+| `.gacha`, `.leaderboard`, serta fitur RPG/finance | Memerlukan model data terpisah | Source memakai saldo, EXP, inventaris, limit, peluang hadiah, atau leaderboard. Sistem ekonomi tidak diaktifkan tanpa skema data, aturan nilai, anti-penyalahgunaan, dan kebijakan yang jelas. |
+| `.siapa` dan alias serupa | Dikecualikan | Alias source mencakup penghinaan, bahasa seksual, serta label yang dapat mempermalukan anggota grup. Fitur pemilihan anggota tidak diaktifkan dengan daftar alias tersebut. |
+
 ## Prinsip adaptasi reply dan quote
 
 Showins Bot sudah mengirim respons command dengan `quoted: message`, sehingga respons teks, menu interaktif, dan payload custom akan mengutip pesan yang memanggil command. Untuk fitur yang membutuhkan jawaban atas pesan non-command—seperti quiz—adapter sesi akan mencocokkan `stanzaId` quote dengan pesan game yang dibuat bot. Pesan biasa yang bukan jawaban sesi tidak dicatat ke Command Ledger.
