@@ -1,4 +1,4 @@
-import { buildLocationReply } from '../src/services/reply-showcase.js'
+import { buildLocationReply } from '../../src/services/reply-showcase.js'
 
 export default {
   name: 'reply-location',

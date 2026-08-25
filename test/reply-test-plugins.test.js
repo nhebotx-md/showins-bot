@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import replyButtons from '../plugins/reply-buttons.js'
-import replyDocument from '../plugins/reply-document.js'
-import replyLocation from '../plugins/reply-location.js'
-import replyModels from '../plugins/reply-models.js'
-import replyPlain from '../plugins/reply-plain.js'
-import replyPoll from '../plugins/reply-poll.js'
-import replyReaction from '../plugins/reply-reaction.js'
-import replyTest from '../plugins/reply-test.js'
+import replyButtons from '../plugins/testreply/reply-buttons.js'
+import replyDocument from '../plugins/testreply/reply-document.js'
+import replyLocation from '../plugins/testreply/reply-location.js'
+import replyModels from '../plugins/testreply/reply-models.js'
+import replyPlain from '../plugins/testreply/reply-plain.js'
+import replyPoll from '../plugins/testreply/reply-poll.js'
+import replyReaction from '../plugins/testreply/reply-reaction.js'
+import replyTest from '../plugins/testreply/reply-test.js'
 
 const config = { bot: { name: 'Showins Bot', prefix: '.' } }
 

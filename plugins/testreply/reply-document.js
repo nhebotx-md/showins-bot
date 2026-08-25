@@ -1,4 +1,4 @@
-import { buildDocumentReply } from '../src/services/reply-showcase.js'
+import { buildDocumentReply } from '../../src/services/reply-showcase.js'
 
 export default {
   name: 'reply-document',

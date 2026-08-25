@@ -1,4 +1,4 @@
-import { BAILEYS_INFO } from '../src/core/baileys.js'
+import { BAILEYS_INFO } from '../../src/core/baileys.js'
 
 export default {
   name: 'status',

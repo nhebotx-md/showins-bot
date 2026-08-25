@@ -1,4 +1,4 @@
-import { buildBotContactReply } from '../src/services/reply-showcase.js'
+import { buildBotContactReply } from '../../src/services/reply-showcase.js'
 
 export default {
   name: 'reply-contact',

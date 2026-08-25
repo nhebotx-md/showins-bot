@@ -1,4 +1,4 @@
-import { buildPlainReply } from '../src/services/reply-showcase.js'
+import { buildPlainReply } from '../../src/services/reply-showcase.js'
 
 export default {
   name: 'reply-plain',

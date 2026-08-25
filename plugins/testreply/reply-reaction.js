@@ -1,4 +1,4 @@
-import { buildReactionReply } from '../src/services/reply-showcase.js'
+import { buildReactionReply } from '../../src/services/reply-showcase.js'
 
 export default {
   name: 'reply-reaction',

@@ -1,4 +1,4 @@
-import { normalizePhoneNumber } from '../src/core/config.js'
+import { normalizePhoneNumber } from '../../src/core/config.js'
 
 function getTargetNumber(args) {
   const number = normalizePhoneNumber(args[0])

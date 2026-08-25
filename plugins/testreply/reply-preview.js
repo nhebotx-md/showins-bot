@@ -1,4 +1,4 @@
-import { buildPreviewReply } from '../src/services/reply-showcase.js'
+import { buildPreviewReply } from '../../src/services/reply-showcase.js'
 
 export default {
   name: 'reply-preview',

@@ -11,7 +11,7 @@ Showins Bot sengaja dibuat kecil, tetapi setiap tanggung jawab dipisahkan agar m
 | `src/core/plugin-categories.js` | Registry kategori, urutan, label, dan deskripsi kategori plugin | Saat menambah jenis fitur baru |
 | `src/core/connection-manager.js` | Session, pairing, koneksi, dan reconnect | Hanya bila mengubah perilaku koneksi |
 | `src/core/command-router.js` | Membaca pesan dan mengarahkan perintah ke plugin | Bila ingin mengubah format perintah |
-| `plugins/` | Fitur bot yang berdiri sendiri | Lokasi utama untuk menambah fitur baru |
+| `plugins/<kategori>/` | Fitur bot yang berdiri sendiri, dipisahkan menurut kategori | Saat menambah command pada kategori yang sesuai |
 | `src/services/` | Pembantu yang dipakai banyak plugin | Untuk formatter, API, atau pesan kaya |
 | `src/services/user-store.js` | Penyimpanan lokal pengguna terdaftar dan premium | Saat mengubah format data pengguna |
 | `storage/session/` | Kredensial WhatsApp | Jangan diunggah atau dihapus kecuali recovery session |
@@ -33,6 +33,8 @@ Pesan native-flow/interaktif dibungkus dalam `src/services/rich-messages.js`. Ji
 
 Setiap plugin **wajib** memiliki `category` yang terdaftar di `src/core/plugin-categories.js`. Kategori yang tersedia saat ini adalah `main`, `tools`, `fun`, `testreply`, `group`, `media`, `owner`, dan `system`. Menu utama selalu memuat submenu dari seluruh kategori, termasuk kategori yang belum memiliki fitur; hal ini menjaga struktur navigasi tetap konsisten ketika plugin baru ditambahkan.
 
+Direktori `plugins/` adalah induk tunggal untuk seluruh plugin. Setiap kategori memiliki subfolder dengan ID yang sama, sehingga struktur yang berlaku adalah `plugins/main/`, `plugins/tools/`, `plugins/fun/`, `plugins/testreply/`, `plugins/group/`, `plugins/media/`, `plugins/owner/`, dan `plugins/system/`. Loader memindai subfolder secara rekursif dalam urutan jalur alfabetis yang konsisten, lalu memastikan folder kategori teratas sesuai dengan properti `category` milik plugin. Berkas JavaScript di root `plugins/` maupun plugin yang salah folder akan dilewati dan dicatat sebagai error, sehingga command tidak dapat diam-diam masuk ke kategori yang keliru.
+
 ```js
 export default {
   name: 'halo',
@@ -49,12 +51,13 @@ Plugin `menu` menggunakan `src/services/plugin-menu.js` untuk membuat ringkasan 
 
 ## Membuat plugin baru
 
-Buat satu berkas baru di `plugins/`, misalnya `plugins/halo.js`.
+Buat satu berkas baru pada folder kategori yang tepat, misalnya `plugins/fun/halo.js`.
 
 ```js
 export default {
   name: 'halo',
   category: 'fun',
+  access: 'registered',
   description: 'Contoh fitur sederhana.',
   commands: ['halo'],
   async execute({ reply }) {

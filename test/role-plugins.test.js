@@ -3,9 +3,9 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
-import ownerPlugin from '../plugins/owner.js'
-import premiumPlugin from '../plugins/premium.js'
-import registerPlugin from '../plugins/register.js'
+import ownerPlugin from '../plugins/owner/owner.js'
+import premiumPlugin from '../plugins/fun/premium.js'
+import registerPlugin from '../plugins/main/register.js'
 import { createUserStore } from '../src/services/user-store.js'
 
 async function createTemporaryUserStore() {

@@ -1,4 +1,4 @@
-import { getMenuCategories, renderCategoryDetail, renderCategoryOverview } from '../src/services/plugin-menu.js'
+import { getMenuCategories, renderCategoryDetail, renderCategoryOverview } from '../../src/services/plugin-menu.js'
 
 export default {
   name: 'menu',

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import menuPlugin from '../plugins/menu.js'
+import menuPlugin from '../plugins/main/menu.js'
 
 const config = { bot: { name: 'Showins Bot', prefix: '.' } }
 const plugins = [

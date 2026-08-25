@@ -1,4 +1,4 @@
-import { buildPollReply } from '../src/services/reply-showcase.js'
+import { buildPollReply } from '../../src/services/reply-showcase.js'
 
 export default {
   name: 'reply-poll',

@@ -10,7 +10,7 @@ Showins Bot adalah fondasi baru untuk bot WhatsApp pribadi. Proyek ini memakai *
 |---|---|
 | **Stabil** | Reconnect memiliki batas; session tidak pernah dihapus otomatis; 405 sebelum pairing dihentikan tanpa loop. |
 | **Aman untuk pairing** | Ubuntu Chrome fingerprint dan kode pairing asli dari WhatsApp; tidak ada kode custom yang dipaksakan. |
-| **Mudah dipahami** | Satu plugin = satu berkas. Perintah otomatis terdaftar saat plugin berada di folder `plugins/`. |
+| **Mudah dipahami** | Satu plugin = satu berkas. Perintah otomatis terdaftar saat plugin berada di `plugins/<kategori>/` yang sesuai. |
 | **Siap fitur pesan kaya** | Adapter disediakan untuk quick reply; Baileys mod mendukung album, interactive message, rich response, code block, table, sticker pack, dan fitur bisnis lain. |
 | **Lokal terlebih dahulu** | Dibuat untuk Termux/Ubuntu proot tanpa dashboard atau layanan tambahan. |
 
@@ -20,7 +20,15 @@ Showins Bot adalah fondasi baru untuk bot WhatsApp pribadi. Proyek ini memakai *
 showins-bot/
 ├── config.example.js     # Contoh pengaturan yang aman untuk dibagikan
 ├── config.js             # Pengaturan pribadi Anda (tidak masuk Git)
-├── plugins/              # Tambahkan fitur bot di sini
+├── plugins/              # Induk seluruh fitur bot, dipisahkan per kategori
+│   ├── main/             # menu.js dan register.js
+│   ├── tools/            # ping.js dan utilitas mendatang
+│   ├── fun/              # premium.js dan fitur hiburan
+│   ├── testreply/        # seluruh plugin Reply Lab
+│   ├── group/            # disiapkan untuk fitur grup
+│   ├── media/            # disiapkan untuk fitur media
+│   ├── owner/            # owner.js dan command administrasi
+│   └── system/           # status.js dan command sistem
 ├── src/
 │   ├── core/             # Adapter Baileys, koneksi, session, router, dan loader plugin
 │   ├── services/         # Pembantu pesan kaya dan layanan bersama
@@ -85,12 +93,13 @@ Deteksi identitas mendukung chat pribadi dan grup, termasuk JID alternatif pada 
 
 ## Menambah fitur tanpa mengubah inti bot
 
-Buat berkas baru di `plugins/`. Contoh paling kecil:
+Buat berkas baru pada subfolder kategori yang sama dengan nilai `category`. Contoh fitur Tools disimpan di `plugins/tools/halo.js`:
 
 ```js
 export default {
   name: 'halo',
   category: 'tools',
+  access: 'registered',
   description: 'Contoh plugin.',
   commands: ['halo'],
   async execute({ reply }) {
@@ -99,7 +108,7 @@ export default {
 }
 ```
 
-Restart bot, lalu gunakan `.halo`. Plugin dimuat otomatis.
+Restart bot, lalu gunakan `.halo`. Loader memindai subfolder secara rekursif dalam urutan yang konsisten. Berkas JavaScript yang diletakkan langsung di `plugins/`, atau yang foldernya tidak sama dengan nilai `category`, akan dilewati dan dicatat sebagai kesalahan agar struktur tetap rapi.
 
 ## Kualitas dan pemeriksaan
 
@@ -133,7 +142,7 @@ Semua import koneksi WhatsApp dipusatkan pada `src/core/baileys.js`. Ketika akan
 | Session, pairing, reconnect | `src/core/connection-manager.js` |
 | Import dan versi library | `src/core/baileys.js` |
 | Quick reply dan fallback | `src/services/rich-messages.js` |
-| Perintah bot | `plugins/` |
+| Perintah bot | `plugins/<kategori>/` |
 
 ## Batas penggunaan
 

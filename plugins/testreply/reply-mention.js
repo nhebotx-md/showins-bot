@@ -1,4 +1,4 @@
-import { buildMentionReply } from '../src/services/reply-showcase.js'
+import { buildMentionReply } from '../../src/services/reply-showcase.js'
 
 export default {
   name: 'reply-mention',

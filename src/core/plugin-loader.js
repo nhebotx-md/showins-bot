@@ -7,7 +7,7 @@ import { isPluginCategory } from './plugin-categories.js'
 const moduleDir = path.dirname(fileURLToPath(import.meta.url))
 const defaultPluginDir = path.resolve(moduleDir, '../../plugins')
 
-function validatePlugin(plugin, file) {
+function validatePlugin(plugin, file, folderCategory) {
   if (
     !plugin?.name ||
     !plugin?.description ||
@@ -19,21 +19,40 @@ function validatePlugin(plugin, file) {
   ) {
     throw new Error(`${file} tidak mengekspor plugin valid.`)
   }
+
+  if (folderCategory !== plugin.category) {
+    throw new Error(`${file} harus berada di folder kategori ${plugin.category}.`)
+  }
+
   return plugin
 }
 
+async function collectPluginFiles(pluginDir, relativeDir = '') {
+  const directory = path.join(pluginDir, relativeDir)
+  const entries = await fs.readdir(directory, { withFileTypes: true })
+  const files = []
+
+  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+    const relativePath = path.join(relativeDir, entry.name)
+    if (entry.isDirectory()) {
+      files.push(...await collectPluginFiles(pluginDir, relativePath))
+    } else if (entry.isFile() && entry.name.endsWith('.js')) {
+      files.push(relativePath)
+    }
+  }
+
+  return files
+}
+
 export async function loadPlugins({ logger, pluginDir = defaultPluginDir }) {
-  const entries = await fs.readdir(pluginDir, { withFileTypes: true })
-  const files = entries
-    .filter(entry => entry.isFile() && entry.name.endsWith('.js'))
-    .map(entry => entry.name)
-    .sort()
+  const files = await collectPluginFiles(pluginDir)
 
   const plugins = []
   for (const file of files) {
     try {
       const moduleUrl = pathToFileURL(path.join(pluginDir, file)).href
-      const plugin = validatePlugin((await import(moduleUrl)).default, file)
+      const folderCategory = file.split(path.sep)[0]
+      const plugin = validatePlugin((await import(moduleUrl)).default, file, folderCategory)
       plugins.push(plugin)
     } catch (error) {
       logger.error({ err: error, file }, 'Plugin dilewati karena gagal dimuat')
