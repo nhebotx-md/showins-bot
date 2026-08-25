@@ -9,7 +9,8 @@ const logger = { info() {}, error() {} }
 
 test('plugin dasar dapat dimuat dan memiliki command', async () => {
   const plugins = await loadPlugins({ logger })
-  assert.equal(plugins.length, 79)
+  assert.equal(plugins.length, 80)
+  assert.ok(plugins.some(plugin => plugin.commands.includes('aturanbot')))
   assert.ok(plugins.some(plugin => plugin.commands.includes('afk')))
   assert.ok(plugins.some(plugin => plugin.commands.includes('setwelcome')))
   assert.ok(plugins.some(plugin => plugin.commands.includes('rulesgrup')))
@@ -27,7 +28,7 @@ test('loader memindai subfolder kategori secara deterministik', async () => {
   assert.deepEqual(plugins.map(plugin => plugin.category), [
     ...Array(38).fill('fun'),
     ...Array(23).fill('group'),
-    ...Array(3).fill('main'),
+    ...Array(4).fill('main'),
     'owner',
     'system',
     ...Array(11).fill('testreply'),
