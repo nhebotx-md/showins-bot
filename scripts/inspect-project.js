@@ -22,6 +22,7 @@ const required = [
   'docs/TERMUX.md',
   'docs/ARCHITECTURE.md',
   'docs/REPLY-LAB.md',
+  'docs/ITSUKICHAN-MESSAGE-RESEARCH.md',
   'test/plugin-categories.test.js',
   'test/category-menu-router.test.js',
   'test/access-control.test.js',

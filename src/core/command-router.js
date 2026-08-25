@@ -85,18 +85,34 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
         })
         return result
       }
-      const sendResponse = async ({ content, type = 'custom', summary = 'RESPONS BOT' }) => {
-        const result = await socket.sendMessage(jid, content, { quoted: message })
-        logger.reply?.({
-          source,
-          role,
-          from: senderNumber || 'LID',
-          target: jid,
-          command: commandLabel,
-          type,
-          summary
-        })
-        return result
+      const sendResponse = async ({ content, type = 'custom', summary = 'RESPONS BOT', fallback }) => {
+        try {
+          const result = await socket.sendMessage(jid, content, { quoted: message })
+          logger.reply?.({
+            source,
+            role,
+            from: senderNumber || 'LID',
+            target: jid,
+            command: commandLabel,
+            type,
+            summary
+          })
+          return result
+        } catch (error) {
+          if (!fallback) throw error
+
+          const result = await socket.sendMessage(jid, { text: fallback }, { quoted: message })
+          logger.reply?.({
+            source,
+            role,
+            from: senderNumber || 'LID',
+            target: jid,
+            command: commandLabel,
+            type: 'fallback',
+            summary: `FALLBACK / ${summary}`
+          })
+          return result
+        }
       }
       const react = async emoji => {
         const result = await socket.sendMessage(jid, { react: { text: emoji, key: message.key } })

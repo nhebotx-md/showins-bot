@@ -68,3 +68,60 @@ export function buildDocumentReply({ botName }) {
 export function buildReactionReply({ botName }) {
   return `${heading('REPLY / REACTION', `${botName} • acknowledgement`)}\n\nReaksi dikirim lebih dahulu, lalu pesan ini menjadi konfirmasi balasan.`
 }
+
+export function buildPollReply({ botName }) {
+  return {
+    content: {
+      poll: {
+        name: `${botName} · Model Poll Reply`,
+        values: ['Plain quoted text', 'Context preview', 'Native-flow button'],
+        selectableCount: 1,
+        toAnnouncementGroup: false,
+        canAddOption: false
+      }
+    },
+    type: 'poll',
+    summary: 'POLL MESSAGE',
+    fallback: `${heading('REPLY / POLL', `${botName} • fallback`)}\n\nPoll tidak didukung klien ini. Pilihan: Plain quoted text, Context preview, Native-flow button.`
+  }
+}
+
+export function buildLocationReply({ botName }) {
+  return {
+    content: {
+      location: {
+        degreesLatitude: 0,
+        degreesLongitude: 0,
+        name: `${botName} · Reply Lab`,
+        address: 'Koordinat demonstrasi 0,0 — bukan lokasi pengguna.'
+      }
+    },
+    type: 'location',
+    summary: 'LOCATION MESSAGE',
+    fallback: `${heading('REPLY / LOCATION', `${botName} • fallback`)}\n\nModel location tidak didukung klien ini. Tidak ada lokasi pengguna yang dikirim.`
+  }
+}
+
+export function buildBotContactReply({ botName, pairingNumber }) {
+  const number = String(pairingNumber || '').replace(/\D/g, '')
+  const displayNumber = number || 'tidak tersedia'
+  const vcard = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    `FN:${botName}`,
+    `TEL;type=CELL;type=VOICE;waid=${displayNumber}:${displayNumber}`,
+    'END:VCARD'
+  ].join('\n')
+
+  return {
+    content: {
+      contacts: {
+        displayName: botName,
+        contacts: [{ displayName: botName, vcard }]
+      }
+    },
+    type: 'contact',
+    summary: 'BOT CONTACT CARD',
+    fallback: `${heading('REPLY / CONTACT', `${botName} • fallback`)}\n\nKartu kontak tidak didukung klien ini. Nomor bot: ${displayNumber}.`
+  }
+}

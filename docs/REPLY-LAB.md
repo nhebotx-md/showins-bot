@@ -29,5 +29,11 @@ Penelusuran terhadap [`setreply.js`](https://github.com/nhebotx-md/ShooNhee-md/b
 | `.replydocument` | Dokumen teks + caption | Menguji lampiran ringan tanpa aset eksternal |
 | `.replyreaction` | Reaction lalu quoted reply | Menguji acknowledgement cepat |
 | `.replybuttons` | Native-flow quick reply | Menguji tombol serta fallback teks |
+| `.replymodels` | Menu model Itsukichan-compatible | Membuka poll, location, dan kartu kontak bot |
+| `.replypoll` | Poll | Menguji poll dengan fallback teks |
+| `.replylocation` | Location demonstrasi | Menguji model lokasi tanpa membagikan lokasi pengguna |
+| `.replycontact` | Kartu kontak bot | Menguji contact card nomor bot sendiri |
 
 Semua payload dibangun melalui `src/services/reply-showcase.js`. Kostumisasi berikutnya—misalnya thumbnail, gambar, GIF, atau branding—cukup dilakukan pada helper ini tanpa mengubah router command atau semua plugin uji.
+
+Model pesan poll, location, dan contact ditambahkan berdasarkan riset Itsukichan Baileys dan diverifikasi terhadap source ItsLiaaa aktif. Lihat [ITSUKICHAN-MESSAGE-RESEARCH.md](ITSUKICHAN-MESSAGE-RESEARCH.md) untuk batas kompatibilitas serta model yang sengaja tidak diadopsi.

@@ -56,6 +56,7 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | `.cattestreply` | Membuka menu kategori Test Reply |
 | `.cat<kategori>` | Membuka menu kategori lain, misalnya `.cattools` atau `.catsystem` |
 | `.replytest` | Membuka laboratorium untuk menguji gaya reply pesan |
+| `.replymodels` | Membuka uji model pesan Itsukichan-compatible |
 | `.register` | Mendaftarkan nomor sendiri sebagai pengguna bot |
 | `.ping` | Menguji respons bot |
 | `.status` atau `.info` | Melihat status runtime |

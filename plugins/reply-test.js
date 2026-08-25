@@ -15,7 +15,8 @@ export default {
         { label: 'Quoted mention', id: `${config.bot.prefix}replymention` },
         { label: 'Document with caption', id: `${config.bot.prefix}replydocument` },
         { label: 'Reaction acknowledgement', id: `${config.bot.prefix}replyreaction` },
-        { label: 'Native-flow buttons', id: `${config.bot.prefix}replybuttons` }
+        { label: 'Native-flow buttons', id: `${config.bot.prefix}replybuttons` },
+        { label: 'Itsukichan message models', id: `${config.bot.prefix}replymodels` }
       ]
     })
   }

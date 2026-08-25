@@ -92,6 +92,8 @@ Kategori `testreply` memuat command yang menguji gaya balasan tanpa menyamar seb
 
 Gaya yang tersedia saat ini meliputi teks quoted, context preview, quoted mention, dokumen teks dengan caption, reaksi kemudian konfirmasi, dan native-flow quick reply. Detail inventaris dan batas desain terdapat di [REPLY-LAB.md](REPLY-LAB.md).
 
+Model pesan tambahan yang berasal dari riset Itsukichan—poll, location demonstrasi, dan kartu kontak bot—menggunakan `sendResponse` dengan fallback teks. Detail kompatibilitas dan model yang sengaja dikecualikan tercatat dalam [ITSUKICHAN-MESSAGE-RESEARCH.md](ITSUKICHAN-MESSAGE-RESEARCH.md).
+
 ## Logger aktivitas command
 
 `src/core/logger.js` adalah satu-satunya modul yang membentuk keluaran terminal. Setelah loader selesai, `logger.startup()` membuat panel **Command Ledger** profesional yang dipisahkan menjadi runtime, feature inventory, dan live activity. Inventory memakai badge count per kategori serta total plugin, sehingga plugin loader tidak perlu menulis satu baris untuk setiap plugin.
