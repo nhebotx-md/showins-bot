@@ -58,6 +58,10 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | Perintah | Fungsi |
 |---|---|
 | `.menu` atau `.help` | Menu utama berisi seluruh submenu kategori |
+| `.menutheme` | Menampilkan pilihan tampilan menu pribadi; tersedia `classic`, `compact`, `ledger`, dan `aura`. |
+| `.menutheme <tema>` | Menyimpan tema menu untuk pengguna terdaftar; gunakan `.menutheme reset` untuk standar. |
+| `.carifitur <kata kunci>` | Mencari command yang benar-benar dapat diakses oleh role dan konteks chat pengguna. |
+| `.stats` | Menampilkan statistik runtime, plugin aktif, serta ringkasan penyimpanan lokal tanpa data identitas pengguna. |
 | `.catfun` | Membuka menu kategori Fun |
 | `.catgroup` | Membuka menu kategori Grup |
 | `.catowner` | Membuka menu kategori Owner |
@@ -71,6 +75,14 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | `.open` / `.close` | Membuka atau menutup grup — khusus admin grup ketika bot juga admin. |
 | `.setnamegc <nama>` / `.setdeskgc <deskripsi>` | Mengubah nama atau deskripsi grup — khusus admin grup ketika bot juga admin. |
 | `.poll pertanyaan | opsi 1, opsi 2` | Membuat poll di grup; gunakan `multi |` di awal untuk pilihan ganda. |
+| `.kick`, `.add`, `.promote`, `.demote`, `.listadmin`, `.linkgc`, `.revoke` | Moderasi peserta grup; seluruh tindakan dilindungi validasi admin dan bot-admin. |
+| `.delete` | Menghapus pesan yang di-quote di grup — khusus admin ketika bot juga admin. |
+| `.rulesgrup`, `.setrulesgrup`, `.resetrulesgrup` | Melihat dan mengelola aturan lokal grup. |
+| `.setwelcome` / `.setgoodbye` | Menyimpan template pesan otomatis peserta masuk atau keluar dari grup. |
+| `.welcome`, `.goodbye`, `.resetwelcome`, `.resetgoodbye` | Melihat atau menghapus template otomatis grup. |
+| `.afk <alasan>` | Menandai pengguna AFK; bot memberi tahu ketika pengguna disebut dan menonaktifkannya saat kembali aktif. |
+| `.top <kategori>` | Membuat top lima anggota grup secara acak untuk hiburan. |
+| `.rate <subjek>` | Memberi nilai acak yang jelas ditandai sebagai hiburan. |
 | `.readmore awal|lanjutan` | Membuat teks spoiler/baca selengkapnya yang mengutip command pengguna. |
 | `.register` | Mendaftarkan nomor sendiri sebagai pengguna bot |
 | `.ping` | Menguji respons bot |
@@ -81,7 +93,7 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | `.delpremium <nomor>` | Mencabut premium — khusus owner |
 | `.users` | Melihat daftar pengguna — khusus owner |
 
-Menu utama memuat submenu untuk seluruh kategori: **Utama**, **Tools**, **Fun**, **Test Reply**, **Grup**, **Media**, **Owner**, dan **Sistem**. Setiap tombol menjalankan command `cat<kategori>` dan menampilkan menu kategori masing-masing. Kategori yang belum memiliki plugin akan tetap terbuka, tetapi menampilkan pemberitahuan bahwa belum ada fitur aktif. Lihat [Reply Lab](docs/REPLY-LAB.md) untuk inventaris pola reply dan command uji yang tersedia.
+Menu utama memuat submenu untuk seluruh kategori: **Utama**, **Tools**, **Fun**, **Test Reply**, **Grup**, **Media**, **Owner**, dan **Sistem**. Setiap tombol menjalankan command `cat<kategori>` dan menampilkan menu kategori masing-masing. Kategori yang belum memiliki plugin akan tetap terbuka, tetapi menampilkan pemberitahuan bahwa belum ada fitur aktif. Lihat [Reply Lab](docs/REPLY-LAB.md) untuk inventaris pola reply, [Tema Menu](docs/MENU-THEMES.md) untuk kostumisasi menu, dan [Otomasi Grup](docs/GROUP-AUTOMATION.md) untuk command grup yang tersedia.
 
 ## Akses owner, premium, dan pengguna
 
