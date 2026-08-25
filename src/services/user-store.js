@@ -6,6 +6,7 @@ function createRecord(number, existing = {}) {
   return {
     number,
     premium: Boolean(existing.premium),
+    menuTheme: typeof existing.menuTheme === 'string' ? existing.menuTheme : 'classic',
     registeredAt: existing.registeredAt || new Date().toISOString(),
     updatedAt: new Date().toISOString()
   }
@@ -59,6 +60,17 @@ export class UserStore {
     if (!current) throw new Error('Pengguna belum terdaftar. Minta pengguna menjalankan .register terlebih dahulu.')
 
     const user = createRecord(normalizedNumber, { ...current, premium })
+    this.users.set(normalizedNumber, user)
+    await this.save()
+    return user
+  }
+
+  async setMenuTheme(number, menuTheme) {
+    const normalizedNumber = normalizePhoneNumber(number)
+    if (normalizedNumber.length < 8) throw new Error('Nomor pengguna tidak valid.')
+
+    const current = this.get(normalizedNumber)
+    const user = createRecord(normalizedNumber, { ...current, menuTheme })
     this.users.set(normalizedNumber, user)
     await this.save()
     return user

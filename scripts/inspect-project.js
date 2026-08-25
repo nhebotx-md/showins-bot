@@ -31,6 +31,7 @@ const required = [
   'plugins/owner',
   'plugins/system',
   'plugins/main/menu.js',
+  'plugins/main/menutheme.js',
   'plugins/main/register.js',
   'plugins/tools/ping.js',
   'plugins/fun/premium.js',
@@ -40,6 +41,7 @@ const required = [
   'docs/TERMUX.md',
   'docs/ARCHITECTURE.md',
   'docs/REPLY-LAB.md',
+  'docs/MENU-THEMES.md',
   'docs/ITSUKICHAN-MESSAGE-RESEARCH.md',
   'docs/SHOONHEE-PLUGIN-COMPATIBILITY.md',
   'test/plugin-categories.test.js',
@@ -56,6 +58,7 @@ const required = [
   ,'test/plugin-safety-check.test.js'
   ,'test/quiz-sessions.test.js'
   ,'test/group-settings.test.js'
+  ,'test/menu-theme.test.js'
 ]
 
 const missing = []

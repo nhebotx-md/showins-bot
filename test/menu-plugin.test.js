@@ -16,10 +16,15 @@ test('plugin menu mengirim semua submenu kategori sebagai pilihan interactive me
     config,
     plugins,
     reply: async () => {},
+    senderNumber: '6281234567890',
+    userStore: { get: () => ({ menuTheme: 'ledger' }) },
     sendMenu: async payload => sentMenus.push(payload)
   })
 
   assert.equal(sentMenus.length, 1)
+  assert.equal(sentMenus[0].title, 'Showins Bot • Ledger')
+  assert.equal(sentMenus[0].footer, 'Tema: Ledger • Showins Bot')
+  assert.match(sentMenus[0].text, /SHOWINS BOT \/ MENU/)
   assert.deepEqual(sentMenus[0].options, [
     { label: 'Utama', id: '.catmain' },
     { label: 'Tools', id: '.cattools' },
