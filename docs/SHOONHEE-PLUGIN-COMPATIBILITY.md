@@ -17,7 +17,7 @@ Dokumen ini mencatat hasil checker statis terhadap commit `e95f25a` dari reposit
 
 ## Batch aman yang sudah diadaptasi
 
-Sebanyak **62 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari kategori `game/`, 10 command pertanyaan santai dari `fun/`, 10 command indikator hiburan dari `cek/`, 23 command grup dari `group/`, `readmore` dari `tools/`, dan `rules` dari `main/`. Seluruhnya menggunakan `adaptedFrom`, sehingga loader memeriksa kategori, access, dan requirements sumber sebelum plugin boleh aktif.
+Sebanyak **70 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari kategori `game/`, 10 command pertanyaan santai dari `fun/`, 10 command indikator hiburan dari `cek/`, 23 command grup dari `group/`, `readmore` dari `tools/`, serta command informasi dan hiburan lokal dari `main/` dan `fun/`. Seluruhnya menggunakan `adaptedFrom`, sehingga loader memeriksa kategori, access, dan requirements sumber sebelum plugin boleh aktif.
 
 | Kelompok | Command utama | Perilaku respons |
 |---|---|---|
@@ -28,6 +28,9 @@ Sebanyak **62 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari k
 | Profil grup | `.rulesgrup`, `.setrulesgrup`, `.resetrulesgrup`, `.welcome`, `.setwelcome`, `.resetwelcome`, `.goodbye`, `.setgoodbye`, `.resetgoodbye` | Konfigurasi disimpan lokal pada `storage/groups.json`. Welcome/goodbye hanya aktif bila admin menyimpan template dan memakai placeholder yang diizinkan. |
 | Status pengguna | `.afk`, `.away`, `.brb` | Status runtime per pengguna; bot memberi tahu saat pengguna disebut dan menghapus status ketika pengguna mengirim pesan lagi. |
 | Informasi utama | `.rules`, `.aturanbot`, `.botrules` | Menampilkan aturan dasar penggunaan bot dalam reply teks yang jelas. |
+| Inventaris fitur | `.carifitur`, `.stats` | Mencari command yang benar-benar dapat diakses pada konteks chat saat ini dan merangkum runtime tanpa identitas pengguna. |
+| Hiburan lokal | `.top`, `.rate`, `.mimpi`, `.bucin` | Top anggota, rating, cerita mimpi, dan gombalan lokal yang ditandai sebagai hiburan; bukan penilaian atau prediksi. |
+| Ringkasan akses | `.benefitpremium`, `.benefitowner` | Menampilkan command premium atau owner yang benar-benar aktif dari metadata plugin; tidak membuat klaim paket, limit, atau layanan yang tidak tersedia. |
 | Utilitas pesan | `.readmore` | Membuat spoiler/read-more menggunakan separator WhatsApp; respons tetap mengutip command pengguna. |
 
 ## Kategori yang tidak akan diadaptasi otomatis

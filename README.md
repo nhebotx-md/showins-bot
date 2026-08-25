@@ -62,6 +62,8 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | `.menutheme <tema>` | Menyimpan tema menu untuk pengguna terdaftar; gunakan `.menutheme reset` untuk standar. |
 | `.carifitur <kata kunci>` | Mencari command yang benar-benar dapat diakses oleh role dan konteks chat pengguna. |
 | `.stats` | Menampilkan statistik runtime, plugin aktif, serta ringkasan penyimpanan lokal tanpa data identitas pengguna. |
+| `.benefitpremium` | Menampilkan command premium yang benar-benar aktif berdasarkan metadata plugin. |
+| `.benefitowner` | Menampilkan command khusus owner yang benar-benar aktif berdasarkan metadata plugin. |
 | `.catfun` | Membuka menu kategori Fun |
 | `.catgroup` | Membuka menu kategori Grup |
 | `.catowner` | Membuka menu kategori Owner |
