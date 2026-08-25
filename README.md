@@ -86,6 +86,7 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | `.top <kategori>` | Membuat top lima anggota grup secara acak untuk hiburan. |
 | `.rate <subjek>` | Memberi nilai acak yang jelas ditandai sebagai hiburan. |
 | `.truth` | Mengirim pertanyaan Truth ringan dari bank prompt lokal; jawaban bersifat opsional dan tidak perlu memuat data pribadi. |
+| `.dare` | Mengirim tantangan kreativitas ringan dari bank prompt lokal; bersifat sukarela dan tidak meminta tindakan berisiko. |
 | `.readmore awal|lanjutan` | Membuat teks spoiler/baca selengkapnya yang mengutip command pengguna. |
 | `.register` | Mendaftarkan nomor sendiri sebagai pengguna bot |
 | `.ping` | Menguji respons bot |

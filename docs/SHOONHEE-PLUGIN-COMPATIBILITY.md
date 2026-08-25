@@ -17,7 +17,7 @@ Dokumen ini mencatat hasil checker statis terhadap commit `e95f25a` dari reposit
 
 ## Batch aman yang sudah diadaptasi
 
-Sebanyak **71 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari kategori `game/`, 10 command pertanyaan santai dari `fun/`, 10 command indikator hiburan dari `cek/`, 23 command grup dari `group/`, `readmore` dari `tools/`, serta command informasi dan hiburan lokal dari `main/` dan `fun/`. Seluruhnya menggunakan `adaptedFrom`, sehingga loader memeriksa kategori, access, dan requirements sumber sebelum plugin boleh aktif.
+Sebanyak **72 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari kategori `game/`, 10 command pertanyaan santai dari `fun/`, 10 command indikator hiburan dari `cek/`, 23 command grup dari `group/`, `readmore` dari `tools/`, serta command informasi dan hiburan lokal dari `main/` dan `fun/`. Seluruhnya menggunakan `adaptedFrom`, sehingga loader memeriksa kategori, access, dan requirements sumber sebelum plugin boleh aktif.
 
 | Kelompok | Command utama | Perilaku respons |
 |---|---|---|
@@ -31,6 +31,7 @@ Sebanyak **71 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari k
 | Inventaris fitur | `.carifitur`, `.stats` | Mencari command yang benar-benar dapat diakses pada konteks chat saat ini dan merangkum runtime tanpa identitas pengguna. |
 | Hiburan lokal | `.top`, `.rate`, `.mimpi`, `.bucin` | Top anggota, rating, cerita mimpi, dan gombalan lokal yang ditandai sebagai hiburan; bukan penilaian atau prediksi. |
 | Permainan Truth | `.truth`, `.truthq` | Mengirim satu prompt percakapan dari bank lokal yang disaring; jawaban bersifat sukarela dan tidak meminta data pribadi. |
+| Permainan Dare | `.dare`, `.dareq`, `.tantang` | Mengirim satu tantangan kreativitas dari bank lokal yang disaring; tantangan sukarela dan tidak memerlukan tindakan berisiko. |
 | Ringkasan akses | `.benefitpremium`, `.benefitowner` | Menampilkan command premium atau owner yang benar-benar aktif dari metadata plugin; tidak membuat klaim paket, limit, atau layanan yang tidak tersedia. |
 | Utilitas pesan | `.readmore` | Membuat spoiler/read-more menggunakan separator WhatsApp; respons tetap mengutip command pengguna. |
 
