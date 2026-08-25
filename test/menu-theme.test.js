@@ -15,8 +15,18 @@ test('renderer menu mendukung tema aman yang berbeda tanpa mengubah navigasi kat
   assert.equal(getMenuTheme('tidak-ada').id, 'classic')
   assert.match(ledger, /SHOWINS \/ MENU/)
   assert.match(ledger, /\.cattools/)
+  assert.doesNotMatch(ledger, /undefined/)
   assert.match(aura.text, /✦ \*Showins — Tools\* ✦/)
   assert.match(aura.text, /\.ping/)
+})
+
+test('semua tema overview merender kategori tanpa properti visual yang hilang', () => {
+  for (const theme of ['classic', 'compact', 'ledger', 'aura']) {
+    const output = renderCategoryOverview({ botName: 'Showins', prefix: '.', plugins, theme })
+    assert.doesNotMatch(output, /undefined/)
+    assert.match(output, /Utama/)
+    assert.match(output, /Tools/)
+  }
 })
 
 test('command menutheme menampilkan pemilih dan menyimpan preferensi pengguna', async () => {
