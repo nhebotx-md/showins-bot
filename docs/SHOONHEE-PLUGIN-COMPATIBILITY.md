@@ -17,7 +17,7 @@ Dokumen ini mencatat hasil checker statis terhadap commit `e95f25a` dari reposit
 
 ## Batch aman yang sudah diadaptasi
 
-Sebanyak **61 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari kategori `game/`, 10 command pertanyaan santai dari `fun/`, 10 command indikator hiburan dari `cek/`, 23 command grup dari `group/`, dan `readmore` dari `tools/`. Seluruhnya menggunakan `adaptedFrom`, sehingga loader memeriksa kategori, access, dan requirements sumber sebelum plugin boleh aktif.
+Sebanyak **62 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari kategori `game/`, 10 command pertanyaan santai dari `fun/`, 10 command indikator hiburan dari `cek/`, 23 command grup dari `group/`, `readmore` dari `tools/`, dan `rules` dari `main/`. Seluruhnya menggunakan `adaptedFrom`, sehingga loader memeriksa kategori, access, dan requirements sumber sebelum plugin boleh aktif.
 
 | Kelompok | Command utama | Perilaku respons |
 |---|---|---|
@@ -27,6 +27,7 @@ Sebanyak **61 plugin hasil adaptasi** aktif setelah checker: 17 quiz teks dari k
 | Fitur grup | `.open`, `.close`, `.setnamegc`, `.setdeskgc`, `.poll`, `.kick`, `.promote`, `.demote`, `.add`, `.delete`, `.linkgc`, `.revoke` | Router memverifikasi konteks grup; moderasi memerlukan admin pengirim dan bot-admin. Add dibatasi maksimal 10 nomor; delete wajib mengutip pesan target. |
 | Profil grup | `.rulesgrup`, `.setrulesgrup`, `.resetrulesgrup`, `.welcome`, `.setwelcome`, `.resetwelcome`, `.goodbye`, `.setgoodbye`, `.resetgoodbye` | Konfigurasi disimpan lokal pada `storage/groups.json`. Welcome/goodbye hanya aktif bila admin menyimpan template dan memakai placeholder yang diizinkan. |
 | Status pengguna | `.afk`, `.away`, `.brb` | Status runtime per pengguna; bot memberi tahu saat pengguna disebut dan menghapus status ketika pengguna mengirim pesan lagi. |
+| Informasi utama | `.rules`, `.aturanbot`, `.botrules` | Menampilkan aturan dasar penggunaan bot dalam reply teks yang jelas. |
 | Utilitas pesan | `.readmore` | Membuat spoiler/read-more menggunakan separator WhatsApp; respons tetap mengutip command pengguna. |
 
 ## Kategori yang tidak akan diadaptasi otomatis
