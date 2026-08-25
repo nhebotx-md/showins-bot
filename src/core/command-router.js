@@ -2,6 +2,7 @@ import { sendInteractiveMenu } from '../services/rich-messages.js'
 import { canAccess, getAccessLabel, getSenderNumber, getSenderNumbers, resolveUserRole } from './access-control.js'
 import { classifyChat } from './logger.js'
 import { getCategoryIdFromMenuCommand } from './plugin-categories.js'
+import { getPluginContextViolation } from './plugin-policy.js'
 
 function parseNativeFlowResponse(message = {}) {
   const paramsJson = message.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson
@@ -35,7 +36,7 @@ function getCommand(text, prefix) {
   return { command: command.toLowerCase(), args }
 }
 
-export function createCommandRouter({ config, plugins, logger, userStore }) {
+export function createCommandRouter({ config, plugins, logger, userStore, services = {} }) {
   const commandMap = new Map()
   for (const plugin of plugins) {
     for (const command of plugin.commands) commandMap.set(command.toLowerCase(), plugin)
@@ -46,7 +47,10 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
       if (!message.message || message.key.remoteJid === 'status@broadcast') continue
 
       const parsed = getCommand(getText(message.message), config.bot.prefix)
-      if (!parsed?.command) continue
+      if (!parsed?.command) {
+        await services.quiz?.handleResponse?.({ socket, message })
+        continue
+      }
 
       const jid = message.key.remoteJid
       const source = classifyChat(jid)
@@ -147,6 +151,7 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
         userStore,
         config,
         plugins,
+        services,
         logger,
         reply,
         sendMenu,
@@ -159,6 +164,18 @@ export function createCommandRouter({ config, plugins, logger, userStore }) {
           `Akses ditolak. Perintah ini hanya untuk pengguna ${getAccessLabel(plugin.access)}. ` +
             `Peran Anda: ${role === 'guest' ? 'belum terdaftar' : role}.`
         )
+        continue
+      }
+
+      try {
+        const contextViolation = await getPluginContextViolation({ plugin, message, jid, socket })
+        if (contextViolation) {
+          await context.reply(contextViolation)
+          continue
+        }
+      } catch (error) {
+        logger.error({ err: error, plugin: plugin.name, command: parsed.command }, 'Konteks command tidak dapat diverifikasi')
+        await context.reply('Izin command tidak dapat diverifikasi saat ini.')
         continue
       }
 

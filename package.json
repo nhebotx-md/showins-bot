@@ -11,7 +11,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
-    "check": "node scripts/check-syntax.js",
+    "check": "node scripts/check-syntax.js && node scripts/check-plugin-safety.js",
     "test": "node --test --test-force-exit",
     "inspect": "node scripts/inspect-project.js"
   },

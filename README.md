@@ -22,10 +22,10 @@ showins-bot/
 ├── config.js             # Pengaturan pribadi Anda (tidak masuk Git)
 ├── plugins/              # Induk seluruh fitur bot, dipisahkan per kategori
 │   ├── main/             # menu.js dan register.js
-│   ├── tools/            # ping.js dan utilitas mendatang
-│   ├── fun/              # premium.js dan fitur hiburan
+│   ├── tools/            # ping.js, readmore.js, dan utilitas aman
+│   ├── fun/              # quiz, hiburan, dan fitur Fun modular
 │   ├── testreply/        # seluruh plugin Reply Lab
-│   ├── group/            # disiapkan untuk fitur grup
+│   ├── group/            # command administrasi grup yang terproteksi
 │   ├── media/            # disiapkan untuk fitur media
 │   ├── owner/            # owner.js dan command administrasi
 │   └── system/           # status.js dan command sistem
@@ -51,7 +51,7 @@ Installer membuat `config.js` jika belum ada, memasang dependency, dan menjalank
 
 Apabila WhatsApp mengembalikan `401` sebelum kode pairing muncul, jangan hapus seluruh folder `storage`. Gunakan `bash scripts/reset-pairing-session.sh` untuk mencadangkan dan mereset **hanya** session pairing, sambil mempertahankan data pengguna/premium.
 
-Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memahami folder dan cara membuat fitur baru, buka [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memahami folder dan cara membuat fitur baru, buka [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Status audit dan adaptasi plugin ShooNhee-md tersedia pada [docs/SHOONHEE-PLUGIN-COMPATIBILITY.md](docs/SHOONHEE-PLUGIN-COMPATIBILITY.md).
 
 ## Perintah yang tersedia
 
@@ -65,6 +65,13 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | `.cat<kategori>` | Membuka menu kategori lain, misalnya `.cattools` atau `.catsystem` |
 | `.replytest` | Membuka laboratorium untuk menguji gaya reply pesan |
 | `.replymodels` | Membuka uji model pesan Itsukichan-compatible |
+| `.asahotak`, `.caklontong`, `.kataacak`, `.riddle`, `.tebakkimia`, dan quiz teks lain | Memulai quiz hasil adaptasi ShooNhee-md; jawaban harus membalas quote pesan quiz bot. |
+| `.akankah <pertanyaan>` dan command pertanyaan Fun lain | Respons hiburan ringan yang tidak diklaim sebagai kepastian. |
+| `.cekbaik`, `.cekcreative`, `.cekgamer`, dan command cek lain | Indikator acak untuk hiburan, bukan asesmen pribadi. |
+| `.open` / `.close` | Membuka atau menutup grup — khusus admin grup ketika bot juga admin. |
+| `.setnamegc <nama>` / `.setdeskgc <deskripsi>` | Mengubah nama atau deskripsi grup — khusus admin grup ketika bot juga admin. |
+| `.poll pertanyaan | opsi 1, opsi 2` | Membuat poll di grup; gunakan `multi |` di awal untuk pilihan ganda. |
+| `.readmore awal|lanjutan` | Membuat teks spoiler/baca selengkapnya yang mengutip command pengguna. |
 | `.register` | Mendaftarkan nomor sendiri sebagai pengguna bot |
 | `.ping` | Menguji respons bot |
 | `.status` atau `.info` | Melihat status runtime |
@@ -118,7 +125,7 @@ npm test
 npm run inspect
 ```
 
-`npm run check` memeriksa sintaks seluruh berkas JavaScript di `src/`, `plugins/`, dan `test/`. Pengujian memastikan nomor pairing dibersihkan dengan benar, plugin dasar termuat, source tidak mengirim kode pairing kustom, adapter pusat tetap menunjuk **ItsLiaaa Baileys `0.3.18-final`**, serta menu interaktif selalu memiliki fallback teks.
+`npm run check` memeriksa sintaks seluruh berkas JavaScript di `src/`, `plugins/`, dan `test/`, lalu menjalankan checker keamanan plugin. Checker menolak pola eksekusi proses, evaluasi dinamis, broadcast/spam, konten dewasa, model pesan menipu, penghapusan berkas, dan plugin hasil adaptasi ShooNhee-md yang tidak sesuai policy. Pengujian memastikan nomor pairing dibersihkan dengan benar, plugin dasar termuat, quiz hanya menerima jawaban yang mengutip pesan bot, command grup memverifikasi admin, source tidak mengirim kode pairing kustom, adapter pusat tetap menunjuk **ItsLiaaa Baileys `0.3.18-final`**, serta menu interaktif selalu memiliki fallback teks.
 
 ## Logger terminal Termux
 

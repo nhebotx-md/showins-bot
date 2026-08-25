@@ -5,6 +5,7 @@ import { createLogger } from './core/logger.js'
 import { loadPlugins } from './core/plugin-loader.js'
 import { createCommandRouter } from './core/command-router.js'
 import { createUserStore } from './services/user-store.js'
+import { createQuizSessionService } from './services/quiz-sessions.js'
 import { inspectRuntime } from './core/runtime.js'
 
 const logger = createLogger()
@@ -41,7 +42,10 @@ async function main() {
     detail: `${runtime.runtime} · Node ${runtime.nodeVersion} · ${runtime.arch}`
   })
 
-  const routeMessage = createCommandRouter({ config, plugins, logger, userStore })
+  const services = {
+    quiz: createQuizSessionService({ config, logger, userStore })
+  }
+  const routeMessage = createCommandRouter({ config, plugins, logger, userStore, services })
 
   const manager = new ConnectionManager({
     config,

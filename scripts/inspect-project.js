@@ -7,6 +7,7 @@ const required = [
   'src/core/baileys.js',
   'src/core/access-control.js',
   'src/core/runtime.js',
+  'src/core/plugin-policy.js',
   'src/core/plugin-categories.js',
   'src/core/connection-manager.js',
   'src/core/command-router.js',
@@ -15,7 +16,12 @@ const required = [
   'src/services/reply-showcase.js',
   'src/services/plugin-menu.js',
   'src/services/user-store.js',
+  'src/services/quiz-sessions.js',
+  'src/services/fun-oracle.js',
+  'src/services/fun-check.js',
+  'src/services/group-settings.js',
   'scripts/reset-pairing-session.sh',
+  'scripts/check-plugin-safety.js',
   'plugins/main',
   'plugins/tools',
   'plugins/fun',
@@ -35,6 +41,7 @@ const required = [
   'docs/ARCHITECTURE.md',
   'docs/REPLY-LAB.md',
   'docs/ITSUKICHAN-MESSAGE-RESEARCH.md',
+  'docs/SHOONHEE-PLUGIN-COMPATIBILITY.md',
   'test/plugin-categories.test.js',
   'test/category-menu-router.test.js',
   'test/access-control.test.js',
@@ -45,6 +52,10 @@ const required = [
   'test/rich-messages.test.js'
   ,'test/reply-showcase.test.js'
   ,'test/reply-test-plugins.test.js'
+  ,'test/plugin-policy.test.js'
+  ,'test/plugin-safety-check.test.js'
+  ,'test/quiz-sessions.test.js'
+  ,'test/group-settings.test.js'
 ]
 
 const missing = []
