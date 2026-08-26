@@ -50,7 +50,7 @@ async function main() {
   const services = {
     quiz: createQuizSessionService({ config, logger, userStore }),
     groupProfiles,
-    afk: createAfkService()
+    afk: createAfkService({ config })
   }
   const groupGreetings = createGroupGreetingService({ groupProfiles, config, logger })
   const routeMessage = createCommandRouter({ config, plugins, logger, userStore, services })

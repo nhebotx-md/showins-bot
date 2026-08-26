@@ -7,7 +7,16 @@ export default {
     name: 'Showins Bot',
     prefix: '.',
     ownerNumbers: ['6281234567890'],
-    mode: 'public'
+    mode: 'public',
+    // Header visual untuk semua respons. Ini hanya mengidentifikasi bot sendiri;
+    // bukan tanda verifikasi, forward, atau identitas kontak pihak ketiga.
+    responseBranding: {
+      enabled: true,
+      label: 'RESPONS OTOMATIS',
+      sourceUrl: 'https://github.com/nhebotx-md/showins-bot',
+      // Kartu visual asli milik Showins Bot, bukan gambar dokumen atau akun pihak lain.
+      thumbnailUrl: 'https://raw.githubusercontent.com/nhebotx-md/showins-bot/main/assets/showins-response-card.png'
+    }
   },
 
   data: {

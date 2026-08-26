@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { getSenderNumber, getSenderNumbers, resolveUserRole } from '../core/access-control.js'
 import { classifyChat } from '../core/logger.js'
+import { brandMessageContent, createResponseBranding } from './response-branding.js'
 
 const quizDataDirectory = new URL('../data/quiz/', import.meta.url)
 const QUIZ_META = Object.freeze({
@@ -72,6 +73,7 @@ export function getQuizBankPaths() {
 
 export function createQuizSessionService({ config, logger, userStore, banks = defaultQuizBanks, timeoutMs = 90_000 } = {}) {
   const sessions = new Map()
+  const branding = createResponseBranding(config)
 
   function clearSession(jid) {
     const session = sessions.get(jid)
@@ -95,7 +97,7 @@ export function createQuizSessionService({ config, logger, userStore, banks = de
   }
 
   async function sendSessionReply({ socket, message, jid, command, content, type, summary }) {
-    const result = await socket.sendMessage(jid, content, { quoted: message })
+    const result = await socket.sendMessage(jid, brandMessageContent(content, branding), { quoted: message })
     await logReply({ message, jid, command, type, summary })
     return result
   }

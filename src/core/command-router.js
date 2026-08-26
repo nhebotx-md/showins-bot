@@ -1,4 +1,5 @@
 import { sendInteractiveMenu } from '../services/rich-messages.js'
+import { brandMessageContent, buildBrandedTextContent, createResponseBranding, formatBrandedText } from '../services/response-branding.js'
 import { canAccess, getAccessLabel, getSenderNumber, getSenderNumbers, resolveUserRole } from './access-control.js'
 import { classifyChat } from './logger.js'
 import { getCategoryIdFromMenuCommand } from './plugin-categories.js'
@@ -38,6 +39,7 @@ function getCommand(text, prefix) {
 
 export function createCommandRouter({ config, plugins, logger, userStore, services = {} }) {
   const commandMap = new Map()
+  const branding = createResponseBranding(config)
   for (const plugin of plugins) {
     for (const command of plugin.commands) commandMap.set(command.toLowerCase(), plugin)
   }
@@ -66,7 +68,7 @@ export function createCommandRouter({ config, plugins, logger, userStore, servic
       logger.command?.({ source, role, from: senderNumber || 'LID', target: jid, command: commandLabel })
 
       const reply = async text => {
-        const result = await socket.sendMessage(jid, { text }, { quoted: message })
+        const result = await socket.sendMessage(jid, buildBrandedTextContent(text, branding), { quoted: message })
         logger.reply?.({
           source,
           role,
@@ -79,7 +81,7 @@ export function createCommandRouter({ config, plugins, logger, userStore, servic
         return result
       }
       const sendMenu = async data => {
-        const result = await sendInteractiveMenu(socket, jid, { ...data, quoted: message })
+        const result = await sendInteractiveMenu(socket, jid, { ...data, quoted: message, branding })
         logger.reply?.({
           source,
           role,
@@ -93,7 +95,7 @@ export function createCommandRouter({ config, plugins, logger, userStore, servic
       }
       const sendResponse = async ({ content, type = 'custom', summary = 'RESPONS BOT', fallback }) => {
         try {
-          const result = await socket.sendMessage(jid, content, { quoted: message })
+          const result = await socket.sendMessage(jid, brandMessageContent(content, branding), { quoted: message })
           logger.reply?.({
             source,
             role,
@@ -107,7 +109,7 @@ export function createCommandRouter({ config, plugins, logger, userStore, servic
         } catch (error) {
           if (!fallback) throw error
 
-          const result = await socket.sendMessage(jid, { text: fallback }, { quoted: message })
+          const result = await socket.sendMessage(jid, buildBrandedTextContent(fallback, branding), { quoted: message })
           logger.reply?.({
             source,
             role,

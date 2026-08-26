@@ -14,6 +14,7 @@ export function renderGroupTemplate(template, { participant, metadata, botName }
 }
 
 export function createGroupGreetingService({ groupProfiles, config, logger }) {
+  const branding = createResponseBranding(config)
   return {
     async handle({ socket, update }) {
       if (!update?.id?.endsWith('@g.us') || !['add', 'remove'].includes(update.action)) return
@@ -24,7 +25,7 @@ export function createGroupGreetingService({ groupProfiles, config, logger }) {
         const metadata = await socket.groupMetadata(update.id)
         for (const participant of update.participants || []) {
           const text = renderGroupTemplate(template, { participant, metadata, botName: config.bot.name })
-          await socket.sendMessage(update.id, { text, mentions: [participant] })
+          await socket.sendMessage(update.id, { ...buildBrandedTextContent(text, branding), mentions: [participant] })
         }
       } catch (error) {
         logger.error?.({ err: error, group: update.id, action: update.action }, 'Pesan otomatis grup tidak terkirim')
@@ -32,3 +33,4 @@ export function createGroupGreetingService({ groupProfiles, config, logger }) {
     }
   }
 }
+import { buildBrandedTextContent, createResponseBranding } from './response-branding.js'

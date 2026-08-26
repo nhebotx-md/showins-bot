@@ -3,6 +3,8 @@
  * Baileys. Bila pengiriman interaktif ditolak oleh klien atau akun penerima,
  * fallback teks dikirim agar perintah tetap dapat digunakan.
  */
+import { brandMessageContent, buildBrandedTextContent, formatBrandedText } from './response-branding.js'
+
 function buildTextFallback({ title, text, options }) {
   return [title, text, '', ...options.map(option => `• ${option.label}: ${option.id}`)].join('\n')
 }
@@ -14,21 +16,21 @@ function buildQuickReplyButtons(options) {
   }))
 }
 
-export async function sendInteractiveMenu(socket, jid, { title, text, footer, options, quoted }) {
+export async function sendInteractiveMenu(socket, jid, { title, text, footer, options, quoted, branding }) {
   const safeOptions = Array.isArray(options) ? options.filter(option => option?.label && option?.id) : []
-  const fallback = buildTextFallback({ title, text, options: safeOptions })
+  const fallback = formatBrandedText(buildTextFallback({ title, text, options: safeOptions }), branding)
 
   if (safeOptions.length === 0) {
-    return socket.sendMessage(jid, { text: fallback }, { quoted })
+    return socket.sendMessage(jid, buildBrandedTextContent(fallback, branding), { quoted })
   }
 
   try {
     return await socket.sendMessage(
       jid,
-      { title, text, footer, interactiveButtons: buildQuickReplyButtons(safeOptions) },
+      brandMessageContent({ title, text, footer, interactiveButtons: buildQuickReplyButtons(safeOptions) }, branding),
       { quoted }
     )
   } catch {
-    return socket.sendMessage(jid, { text: fallback }, { quoted })
+    return socket.sendMessage(jid, buildBrandedTextContent(fallback, branding), { quoted })
   }
 }

@@ -49,9 +49,10 @@ test('router menjalankan perintah ketika respons quick reply native-flow membawa
     ]
   })
 
-  assert.deepEqual(socket.sent, [
-    { jid: '6280000000000@s.whatsapp.net', content: { text: 'Kategori: tools' } }
-  ])
+  assert.equal(socket.sent.length, 1)
+  assert.equal(socket.sent[0].jid, '6280000000000@s.whatsapp.net')
+  assert.match(socket.sent[0].content.text, /Kategori: tools/)
+  assert.equal(socket.sent[0].content.contextInfo.externalAdReply.title, 'Showins Bot')
 })
 
 test('router mengabaikan respons native-flow dengan JSON yang tidak valid', async () => {

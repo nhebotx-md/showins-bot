@@ -51,26 +51,26 @@ async function runMessage(router, key, command) {
 test('guest hanya dapat membuka menu sedangkan role lain sesuai tingkat aksesnya', async () => {
   const router = createRouter()
 
-  assert.equal(await runCommand(router, '6284444444444', 'menu'), 'ok:menu:guest')
+  assert.match(await runCommand(router, '6284444444444', 'menu'), /ok:menu:guest/)
   assert.match(await runCommand(router, '6284444444444', 'ping'), /Akses ditolak/)
-  assert.equal(await runCommand(router, '6283333333333', 'ping'), 'ok:ping:registered')
-  assert.equal(await runCommand(router, '6282222222222', 'premium'), 'ok:premium:premium')
-  assert.equal(await runCommand(router, '6281111111111', 'owner'), 'ok:owner:owner')
+  assert.match(await runCommand(router, '6283333333333', 'ping'), /ok:ping:registered/)
+  assert.match(await runCommand(router, '6282222222222', 'premium'), /ok:premium:premium/)
+  assert.match(await runCommand(router, '6281111111111', 'owner'), /ok:owner:owner/)
 })
 
 test('owner tetap terdeteksi dari pesan fromMe dan JID alternatif LID', async () => {
   const router = createRouter()
 
-  assert.equal(
+  assert.match(
     await runMessage(router, { remoteJid: '6281111111111@s.whatsapp.net', fromMe: true }, 'owner'),
-    'ok:owner:owner'
+    /ok:owner:owner/
   )
-  assert.equal(
+  assert.match(
     await runMessage(
       router,
       { remoteJid: '1245321@lid', remoteJidAlt: '6281111111111@s.whatsapp.net', fromMe: false },
       'owner'
     ),
-    'ok:owner:owner'
+    /ok:owner:owner/
   )
 })

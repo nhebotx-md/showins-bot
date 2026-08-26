@@ -51,7 +51,7 @@ Installer membuat `config.js` jika belum ada, memasang dependency, dan menjalank
 
 Apabila WhatsApp mengembalikan `401` sebelum kode pairing muncul, jangan hapus seluruh folder `storage`. Gunakan `bash scripts/reset-pairing-session.sh` untuk mencadangkan dan mereset **hanya** session pairing, sambil mempertahankan data pengguna/premium.
 
-Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memahami folder dan cara membuat fitur baru, buka [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Status audit dan adaptasi plugin ShooNhee-md tersedia pada [docs/SHOONHEE-PLUGIN-COMPATIBILITY.md](docs/SHOONHEE-PLUGIN-COMPATIBILITY.md).
+Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memahami folder dan cara membuat fitur baru, buka [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Status audit dan adaptasi plugin ShooNhee-md tersedia pada [docs/SHOONHEE-PLUGIN-COMPATIBILITY.md](docs/SHOONHEE-PLUGIN-COMPATIBILITY.md). Panduan header, context preview, quote asli, dan konfigurasi tampilan respons ada pada [docs/RESPONSE-BRANDING.md](docs/RESPONSE-BRANDING.md).
 
 ## Perintah yang tersedia
 
@@ -98,6 +98,10 @@ Untuk panduan Termux lengkap, buka [docs/TERMUX.md](docs/TERMUX.md). Untuk memah
 | `.users` | Melihat daftar pengguna — khusus owner |
 
 Menu utama memuat submenu untuk seluruh kategori: **Utama**, **Tools**, **Fun**, **Test Reply**, **Grup**, **Media**, **Owner**, dan **Sistem**. Setiap tombol menjalankan command `cat<kategori>` dan menampilkan menu kategori masing-masing. Kategori yang belum memiliki plugin akan tetap terbuka, tetapi menampilkan pemberitahuan bahwa belum ada fitur aktif. Lihat [Reply Lab](docs/REPLY-LAB.md) untuk inventaris pola reply, [Tema Menu](docs/MENU-THEMES.md) untuk kostumisasi menu, dan [Otomasi Grup](docs/GROUP-AUTOMATION.md) untuk command grup yang tersedia.
+
+## Tampilan respons bot
+
+Semua respons command dan respons otomatis utama memakai header identitas **Showins Bot**, context preview yang transparan, serta quote terhadap pesan pemicu bila pesan tersebut tersedia. Branding diatur pada `bot.responseBranding` dan dapat dinonaktifkan bila diperlukan. Desain ini tidak menggunakan tanda verified yang tidak resmi, metadata forwarded palsu, kartu kontak pihak ketiga, atau dokumen dengan nama/isi yang menyesatkan. Buka [Panduan Respons Visual](docs/RESPONSE-BRANDING.md) untuk konfigurasi dan batas tiap jenis pesan.
 
 ## Akses owner, premium, dan pengguna
 

@@ -55,6 +55,8 @@ test('command dan respons dicatat dengan sumber private, grup, dan channel', asy
     assert.equal(harness.events.reply.length, 1)
     assert.equal(harness.events.command[0].source, source)
     assert.equal(harness.events.reply[0].source, source)
-    assert.equal(harness.events.sent[0].content.text, 'Menu bot')
+    assert.match(harness.events.sent[0].content.text, /Showins Bot/)
+    assert.match(harness.events.sent[0].content.text, /Menu bot/)
+    assert.equal(harness.events.sent[0].content.contextInfo.externalAdReply.title, 'Showins Bot')
   }
 })

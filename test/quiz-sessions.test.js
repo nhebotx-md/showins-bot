@@ -59,6 +59,7 @@ test('quiz ShooNhee yang diadaptasi memerlukan quote pesan quiz sebelum menerima
   assert.equal(handled, true)
   assert.deepEqual(sent.at(-2).content.react, { text: '🎉', key: { remoteJid: context.jid, fromMe: false } })
   assert.match(sent.at(-1).content.text, /Benar/)
+  assert.equal(sent.at(-1).content.contextInfo.externalAdReply.title, 'Showins Bot')
 })
 
 test('quiz memberi hint dan menerima menyerah hanya pada quote pesan quiz', async () => {
@@ -86,6 +87,7 @@ test('quiz memberi hint dan menerima menyerah hanya pada quote pesan quiz', asyn
   })
   assert.equal(wrong, true)
   assert.match(sent.at(-1).content.text, /Hint berikutnya/)
+  assert.equal(sent.at(-1).content.contextInfo.externalAdReply.title, 'Showins Bot')
 
   const surrender = await quiz.handleResponse({
     socket,

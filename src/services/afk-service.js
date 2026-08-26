@@ -20,8 +20,9 @@ export function formatAfkDuration(milliseconds) {
   return `${seconds} detik`
 }
 
-export function createAfkService({ now = () => Date.now() } = {}) {
+export function createAfkService({ config = {}, now = () => Date.now() } = {}) {
   const entries = new Map()
+  const branding = createResponseBranding(config)
   return {
     set(jid, reason) {
       entries.set(jid, { reason: reason || 'Tidak ada alasan', startedAt: now() })
@@ -43,17 +44,18 @@ export function createAfkService({ now = () => Date.now() } = {}) {
       const ownAfk = this.clear(sender)
       if (ownAfk) {
         const duration = formatAfkDuration(now() - ownAfk.startedAt)
-        await socket.sendMessage(message.key.remoteJid, { text: `👋 @${numberFromJid(sender)} kembali dari AFK setelah *${duration}*.`, mentions: [sender] }, { quoted: message })
+        await socket.sendMessage(message.key.remoteJid, { ...buildBrandedTextContent(`👋 @${numberFromJid(sender)} kembali dari AFK setelah *${duration}*.`, branding), mentions: [sender] }, { quoted: message })
         responded = true
       }
       for (const mentioned of mentionedJids(message)) {
         const entry = this.get(mentioned)
         if (!entry) continue
         const duration = formatAfkDuration(now() - entry.startedAt)
-        await socket.sendMessage(message.key.remoteJid, { text: `💤 @${numberFromJid(mentioned)} sedang AFK.\nAlasan: *${entry.reason}*\nSejak: *${duration}*`, mentions: [mentioned] }, { quoted: message })
+        await socket.sendMessage(message.key.remoteJid, { ...buildBrandedTextContent(`💤 @${numberFromJid(mentioned)} sedang AFK.\nAlasan: *${entry.reason}*\nSejak: *${duration}*`, branding), mentions: [mentioned] }, { quoted: message })
         responded = true
       }
       return responded
     }
   }
 }
+import { buildBrandedTextContent, createResponseBranding } from './response-branding.js'
