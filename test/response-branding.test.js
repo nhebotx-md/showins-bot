@@ -45,3 +45,8 @@ test('branding dapat dinonaktifkan tanpa mengubah teks', () => {
   const disabled = createResponseBranding({ bot: { name: 'Showins Bot', responseBranding: { enabled: false } } })
   assert.equal(formatBrandedText('Teks asli', disabled), 'Teks asli')
 })
+
+test('branding memakai kartu visual Showins Bot secara default untuk konfigurasi lama', () => {
+  const defaults = createResponseBranding({ bot: { name: 'Showins Bot' } })
+  assert.match(defaults.thumbnailUrl, /showins-response-card\.png$/)
+})

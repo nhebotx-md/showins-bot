@@ -1,4 +1,5 @@
 const DEFAULT_SOURCE_URL = 'https://github.com/nhebotx-md/showins-bot'
+const DEFAULT_THUMBNAIL_URL = 'https://raw.githubusercontent.com/nhebotx-md/showins-bot/main/assets/showins-response-card.png'
 
 function getBotName(config = {}) {
   return String(config?.bot?.name || 'Showins Bot').trim() || 'Showins Bot'
@@ -10,7 +11,7 @@ export function createResponseBranding(config = {}) {
     enabled: options.enabled !== false,
     botName: getBotName(config),
     sourceUrl: String(options.sourceUrl || DEFAULT_SOURCE_URL),
-    thumbnailUrl: String(options.thumbnailUrl || ''),
+    thumbnailUrl: String(options.thumbnailUrl || DEFAULT_THUMBNAIL_URL),
     label: String(options.label || 'RESPONS OTOMATIS').toUpperCase()
   })
 }
