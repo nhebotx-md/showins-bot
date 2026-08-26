@@ -33,4 +33,4 @@ export function createGroupGreetingService({ groupProfiles, config, logger }) {
     }
   }
 }
-import { buildBrandedTextContent, createResponseBranding } from './response-branding.js'
+import { buildBrandedTextContent, createResponseBranding } from './responses/index.js'

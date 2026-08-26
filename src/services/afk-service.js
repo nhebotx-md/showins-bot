@@ -58,4 +58,4 @@ export function createAfkService({ config = {}, now = () => Date.now() } = {}) {
     }
   }
 }
-import { buildBrandedTextContent, createResponseBranding } from './response-branding.js'
+import { buildBrandedTextContent, createResponseBranding } from './responses/index.js'

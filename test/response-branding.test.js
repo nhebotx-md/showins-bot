@@ -5,7 +5,7 @@ import {
   buildBrandedTextContent,
   createResponseBranding,
   formatBrandedText
-} from '../src/services/response-branding.js'
+} from '../src/services/responses/index.js'
 
 const branding = createResponseBranding({
   bot: {

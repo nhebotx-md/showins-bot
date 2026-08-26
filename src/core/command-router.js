@@ -1,5 +1,5 @@
 import { sendInteractiveMenu } from '../services/rich-messages.js'
-import { brandMessageContent, buildBrandedTextContent, createResponseBranding, formatBrandedText } from '../services/response-branding.js'
+import { brandMessageContent, buildBrandedTextContent, createResponseBranding, formatBrandedText } from '../services/responses/index.js'
 import { canAccess, getAccessLabel, getSenderNumber, getSenderNumbers, resolveUserRole } from './access-control.js'
 import { classifyChat } from './logger.js'
 import { getCategoryIdFromMenuCommand } from './plugin-categories.js'

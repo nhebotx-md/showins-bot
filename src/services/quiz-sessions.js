@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { getSenderNumber, getSenderNumbers, resolveUserRole } from '../core/access-control.js'
 import { classifyChat } from '../core/logger.js'
-import { brandMessageContent, createResponseBranding } from './response-branding.js'
+import { brandMessageContent, createResponseBranding } from './responses/index.js'
 
 const quizDataDirectory = new URL('../data/quiz/', import.meta.url)
 const QUIZ_META = Object.freeze({

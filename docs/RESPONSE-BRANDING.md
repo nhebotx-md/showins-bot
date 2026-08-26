@@ -43,6 +43,18 @@ bot: {
 
 Atur `enabled: false` untuk memakai tampilan teks lama tanpa wrapper. `name`, `label`, `sourceUrl`, dan `thumbnailUrl` harus mengidentifikasi bot atau sumber yang memang Anda kelola. `thumbnailUrl` bersifat opsional; bila diisi, kartu preview dapat menampilkan aset visual asli Showins Bot.
 
+## Struktur pengembangan lokal
+
+Semua pembungkus dan gaya respons berada di `src/services/responses/`, sehingga perubahan visual tidak perlu mencampur logika router, akses plugin, atau koneksi WhatsApp.
+
+| Lokasi | Kegunaan |
+|---|---|
+| `src/services/responses/branding.js` | Membuat header teks, context preview, dan konfigurasi kartu visual. |
+| `src/services/responses/index.js` | Facade import stabil untuk command router dan layanan otomatis. |
+| `src/services/responses/README.md` | Panduan singkat untuk menambah variasi respons baru secara lokal. |
+
+Untuk menambah variasi tampilan, buat modul baru pada folder tersebut lalu ekspor melalui `index.js`. Dengan cara ini, plugin tetap memanggil `reply`, `sendMenu`, atau `sendResponse` seperti biasa dan tidak perlu mengetahui detail desain pesan.
+
 ## Dokumen dan kartu kontak
 
 Reply Lab tetap memiliki contoh **dokumen nyata** dengan isi, tipe MIME, nama berkas, dan caption yang akurat. Kartu kontak hanya boleh memuat nomor bot sendiri yang dikonfigurasi. Jangan mengubah payload menjadi forward palsu, kartu kontak yang menyamar sebagai pihak lain, tanda verified yang tidak resmi, atau dokumen yang nama dan isi sebenarnya tidak sesuai.

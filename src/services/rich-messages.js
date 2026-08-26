@@ -3,7 +3,7 @@
  * Baileys. Bila pengiriman interaktif ditolak oleh klien atau akun penerima,
  * fallback teks dikirim agar perintah tetap dapat digunakan.
  */
-import { brandMessageContent, buildBrandedTextContent, formatBrandedText } from './response-branding.js'
+import { brandMessageContent, buildBrandedTextContent, formatBrandedText } from './responses/index.js'
 
 function buildTextFallback({ title, text, options }) {
   return [title, text, '', ...options.map(option => `• ${option.label}: ${option.id}`)].join('\n')
